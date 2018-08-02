@@ -1,0 +1,8 @@
+﻿<x330Backlight:BaseWindow x:Class="X330Backlight.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:x330Backlight="clr-namespace:X330Backlight"
+        Height="0" 
+        Width="0">
+</x330Backlight:BaseWindow>
+

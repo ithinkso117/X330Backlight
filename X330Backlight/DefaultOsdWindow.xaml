@@ -1,0 +1,36 @@
+﻿<x330Backlight:OsdWindow x:Class="X330Backlight.DefaultOsdWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:x330Backlight="clr-namespace:X330Backlight"
+        Height="69" 
+        Width="450">
+    <Window.Resources>
+        <Style TargetType="{x:Type ProgressBar}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ProgressBar}">
+                        <Grid Width="{TemplateBinding Width}">
+                            <Border x:Name="PART_Track" Background="#363636">
+                            </Border>
+                            <Border x:Name="PART_Indicator" HorizontalAlignment="Left" Background="White">
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Border Background="Black" CornerRadius="6">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Image Grid.Column="0" Source="Resources/BackLight.png" VerticalAlignment="Center" HorizontalAlignment="Center" Width="48" Height="48"/>
+            <ProgressBar x:Name="BrightnessLevel" Grid.Column="1" Height="20" Width="290" HorizontalAlignment="Center" VerticalAlignment="Center" Minimum="0" Maximum="15" Value="10"/>
+            <TextBlock x:Name="BrightnessValue" Grid.Column="2" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="32" Text="15"/>
+        </Grid>
+    </Border>
+</x330Backlight:OsdWindow>
+
