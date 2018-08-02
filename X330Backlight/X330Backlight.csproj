@@ -87,6 +87,7 @@
       <DependentUpon>DefaultOsdWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="OsdWindow.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Services\BacklightService.cs" />
     <Compile Include="Services\HotkeyService.cs" />
     <Compile Include="Services\IdleService.cs" />
@@ -98,6 +99,15 @@
     <Compile Include="Services\Interfaces\IService.cs" />
     <Compile Include="Services\ServiceBase.cs" />
     <Compile Include="Services\ServiceManager.cs" />
+    <Compile Include="Settings\OsdTimeoutViewModel.cs" />
+    <Compile Include="Settings\TrayIconViewModel.cs" />
+    <Compile Include="Settings\TurnOffMonitorWayViewModel.cs" />
+    <Compile Include="Settings\OsdStyleViewModel.cs" />
+    <Compile Include="Settings\SettingViewModel.cs" />
+    <Compile Include="Settings\SettingWindow.xaml.cs">
+      <DependentUpon>SettingWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\TimeViewModel.cs" />
     <Compile Include="Utils\AutoStartHelper.cs" />
     <Compile Include="Utils\Configuration\ConfigLoader.cs" />
     <Compile Include="Utils\Configuration\ConfigManager.cs" />
@@ -122,6 +132,7 @@
     <Compile Include="Utils\NotifyIcon\Util.cs" />
     <Compile Include="Utils\SettingManager.cs" />
     <Compile Include="Utils\TranslateHelper.cs" />
+    <Compile Include="Utils\TranslaterExtension.cs" />
     <Compile Include="Utils\TrunOffMonitorWay.cs" />
     <Compile Include="Utils\WinApi.cs" />
     <Page Include="CirculaOsdWindow.xaml">
@@ -141,6 +152,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="DefaultOsdWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\SettingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -184,6 +199,16 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\TrayIcon4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Close.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\OSD1.png" />
+    <Resource Include="Resources\OSD2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Arrow.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

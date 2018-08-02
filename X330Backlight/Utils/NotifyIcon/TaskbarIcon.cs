@@ -81,7 +81,7 @@ namespace X330Backlight.Utils.NotifyIcon
 
             if (me == MouseEvent.IconDoubleClick)
             {
-                RaiseTrayMouseDoubleClickEvent();
+                DoubleClicked?.Invoke(this, EventArgs.Empty);
             }
             if (!me.IsMatch(MenuActivation)
                 || me != MouseEvent.IconRightMouseUp) return;

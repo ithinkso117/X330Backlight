@@ -3,11 +3,13 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using X330Backlight.Services;
 using X330Backlight.Services.Interfaces;
+using X330Backlight.Settings;
 using X330Backlight.Utils;
 using X330Backlight.Utils.NotifyIcon;
 
@@ -26,6 +28,7 @@ namespace X330Backlight
         private TaskbarIcon _taskbarIcon;
         private Bitmap _iconBitmap;
 
+        private SettingWindow _settingWindow;
         private OsdWindow _osdWindow;
 
         public MainWindow()
@@ -35,8 +38,6 @@ namespace X330Backlight
             //Handle auto start.
             var appName = TranslateHelper.Translate("AppName");
             AutoStartHelper.AutoStart(appName, _currentExeFilePath, SettingManager.AutoStart);
-            //Register the window handle created event handler.
-            SourceInitialized += OnSourceInitialized;
         }
 
         /// <summary>
@@ -99,11 +100,25 @@ namespace X330Backlight
                 }
                 
                 _taskbarIcon = new TaskbarIcon { Icon = icon};
+                _taskbarIcon.DoubleClicked += OnTaskbarIconDoubleClicked;
                 var backlightService = ServiceManager.GetService<IBacklightService>();
                 backlightService.BrightnessChanged += OnBrightnessChanged;
                 OnBrightnessChanged(backlightService, EventArgs.Empty);
             }
+
+            _settingWindow = new SettingWindow();
+
             Logger.Write("All functions started.");
+        }
+
+        /// <summary>
+        /// Show setting window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTaskbarIconDoubleClicked(object sender, EventArgs e)
+        {
+            _settingWindow.ShowSettingWindow();
         }
 
         /// <summary>
@@ -134,15 +149,12 @@ namespace X330Backlight
             Logger.Write("All functions stopped.");
         }
 
-        private void OnSourceInitialized(object sender, EventArgs e)
+        protected override void OnWindowInitialized(HwndSource hwndSource)
         {
-            if (PresentationSource.FromVisual(this) is HwndSource hwndSource)
-            {
-                _hwndSource = hwndSource;
-                Logger.Write("Starting application.");
-                StartAllFunctions();
-                Logger.Write("Application started.");
-            }
+            _hwndSource = hwndSource;
+            Logger.Write("Starting application.");
+            StartAllFunctions();
+            Logger.Write("Application started.");
         }
 
         private void OnBrightnessChanged(object sender, EventArgs e)
@@ -159,7 +171,6 @@ namespace X330Backlight
 
             }
         }
-
 
         protected override void OnClosed(EventArgs e)
         {

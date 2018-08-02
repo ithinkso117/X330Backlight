@@ -33,6 +33,12 @@ namespace X330Backlight.Utils.NotifyIcon
         public static readonly DependencyProperty TrayToolTipResolvedProperty
             = TrayToolTipResolvedPropertyKey.DependencyProperty;
 
+
+        /// <summary>
+        /// Raised when double clicked.
+        /// </summary>
+        public event EventHandler DoubleClicked;
+
         /// <summary>
         /// Gets the TrayToolTipResolved property. Returns 
         /// a <see cref="ToolTip"/> control that was created 
@@ -318,45 +324,6 @@ namespace X330Backlight.Utils.NotifyIcon
         private void OnContextMenuPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             UpdateDataContext((ContextMenu)e.NewValue, null, DataContext);
-        }
-
-        #endregion
-
-        #region DoubleClickCommand dependency property
-
-        /// <summary>
-        /// Associates a command that is being executed if the tray icon is being
-        /// double clicked.
-        /// </summary>
-        public static readonly DependencyProperty DoubleClickCommandProperty =
-            DependencyProperty.Register("DoubleClickCommand",
-                typeof(ICommand),
-                typeof(TaskbarIcon),
-                new FrameworkPropertyMetadata(null));
-
-        /// <summary>
-        /// A property wrapper for the <see cref="DoubleClickCommandProperty"/>
-        /// dependency property:<br/>
-        /// Associates a command that is being executed if the tray icon is being
-        /// double clicked.
-        /// </summary>
-        [Description("A command that is being executed if the tray icon is being double-clicked.")]
-        public ICommand DoubleClickCommand
-        {
-            get { return (ICommand)GetValue(DoubleClickCommandProperty); }
-            set { SetValue(DoubleClickCommandProperty, value); }
-        }
-
-        #endregion
-
-        #region TrayMouseDoubleClick
-
-        /// <summary>
-        /// A helper method to raise the TrayMouseDoubleClick event.
-        /// </summary>
-        private void RaiseTrayMouseDoubleClickEvent()
-        {
-            DoubleClickCommand?.Execute(null);
         }
 
         #endregion

@@ -28,7 +28,13 @@ namespace X330Backlight
             {
                 var handle = hwndSource.Handle;
                 WinApi.SetWindowLong(handle, WinApi.GwlExstyle, WinApi.GetWindowLong(handle, WinApi.GwlExstyle) | WinApi.WsExNoactivate);
+                OnWindowInitialized(hwndSource);
             }
+        }
+
+        protected virtual void OnWindowInitialized(HwndSource hwndSource)
+        {
+
         }
     }
 }
