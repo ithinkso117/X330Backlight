@@ -72,7 +72,9 @@ namespace X330Backlight.Services
             if (result == 0)
             {
                 var state = BitConverter.ToUInt64(_stateData, 0);
-                if (state == (WinApi.EsDisplayRequired | WinApi.EsSystemRequired))
+                if((state & WinApi.EsDisplayRequired) == WinApi.EsDisplayRequired ||
+                   (state & WinApi.EsAwaymodeRequired) == WinApi.EsAwaymodeRequired||
+                   (state & WinApi.EsSystemRequired) == WinApi.EsSystemRequired)
                 {
                     return true;
                 }
