@@ -25,7 +25,25 @@ namespace X330Backlight.Services.Interfaces
         /// <summary>
         /// System is about to resume.
         /// </summary>
-        Resuming
+        Resuming,
+    }
+
+    internal enum BatteryStatus
+    {
+        /// <summary>
+        /// The battery capacity is at more than 66 percent
+        /// </summary>
+        High,
+
+        /// <summary>
+        /// The battery capacity is at less than 33 percent
+        /// </summary>
+        Low,
+
+        /// <summary>
+        /// The battery capacity is at less than five percent
+        /// </summary>
+        Critical
     }
 
 
@@ -40,12 +58,17 @@ namespace X330Backlight.Services.Interfaces
         /// <summary>
         /// Raised when system is about to resume or suspend.
         /// </summary>
-        event EventHandler<PowerChangeStatus> PowerChangeStatusChanged;
+        event EventHandler<PowerChangeStatus> PowerStatusChanged;
 
 
         /// <summary>
         /// Gets if the Ac power is plgged in.
         /// </summary>
         bool AcPowerPluggedIn { get; }
+
+        /// <summary>
+        /// Gets the battery status if AcPowerPluggedin is false.
+        /// </summary>
+        BatteryStatus BatteryStatus { get; }
     }
 }

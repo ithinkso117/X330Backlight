@@ -22,7 +22,7 @@ namespace X330Backlight
 
             var powerService = new PowerService();
             powerService.LidSwitchStatusChanged += OnLidSwitchStatusChanged;
-            powerService.PowerChangeStatusChanged += OnPowerChangeStatusChanged;
+            powerService.PowerStatusChanged += OnPowerChangeStatusChanged;
 
             var hotkeyservice = new HotkeyService();
             hotkeyservice.HotKeyTriggered += OnHotKeyTriggered;
@@ -165,7 +165,7 @@ namespace X330Backlight
 
             var powerService = ServiceManager.GetService<IPowerService>();
             powerService.LidSwitchStatusChanged -= OnLidSwitchStatusChanged;
-            powerService.PowerChangeStatusChanged -= OnPowerChangeStatusChanged;
+            powerService.PowerStatusChanged -= OnPowerChangeStatusChanged;
 
             ServiceManager.Clear();
         }

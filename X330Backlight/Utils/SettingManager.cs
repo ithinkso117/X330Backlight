@@ -22,6 +22,8 @@ namespace X330Backlight.Utils
         public const int DefaultTurnOffMonitorWay = 1;
         public const int DefaultTrayIconId = 1;
         public const bool DefaultTurnOffMonitorByThinkVantage = true;
+        public const bool DefaultReduceBrightnessWhenUsingBattery = true;
+        public const bool DefaultReduceBrightnessWhenBatteryLow = true;
 
         private static readonly ConfigManager ConfigManager;
 
@@ -99,6 +101,17 @@ namespace X330Backlight.Utils
         public static bool TurnOffMonitorByThinkVantage { get; private set; }
 
 
+        /// <summary>
+        /// Gets if reduce the brightness when switch to using battery.
+        /// </summary>
+        public static bool ReduceBrightnessWhenUsingBattery { get; private set; }
+
+        /// <summary>
+        /// Gets if reduce the brightness when battery is low.
+        /// </summary>
+        public static bool ReduceBrightnessWhenBatteryLow { get; private set; }
+
+
         static SettingManager()
         {
             var settingContent = string.Empty;
@@ -116,9 +129,11 @@ namespace X330Backlight.Utils
             AcSavingModeBrightness = ConfigManager.GetValue("Setting", "AcSavingModeBrightness", DefaultAcSavingModeBrightness);
             BatterySavingModeTime = ConfigManager.GetValue("Setting", "BatterySavingModeTime", DefaultBatterySavingModeTime);
             BatterySavingModeBrightness = ConfigManager.GetValue("Setting", "BatterySavingModeBrightness", DefaultBatterySavingModeBrightness);
+            ReduceBrightnessWhenUsingBattery = ConfigManager.GetValue("Setting", "ReduceBrightnessWhenUsingBattery", DefaultReduceBrightnessWhenUsingBattery);
+            ReduceBrightnessWhenBatteryLow = ConfigManager.GetValue("Setting", "ReduceBrightnessWhenBatteryLow", DefaultReduceBrightnessWhenBatteryLow);
             TurnOffMonitorWay = ConfigManager.GetValue("Setting", "TurnOffMonitorWay", DefaultTurnOffMonitorWay) == 0? TurnOffMonitorWay.ZeroBrightness: TurnOffMonitorWay.TurnOff;
             TrayIconId = ConfigManager.GetValue("Setting", "TrayIconId", DefaultTrayIconId);
-            TurnOffMonitorByThinkVantage = ConfigManager.GetValue("Setting", "TurnOffMonitorByThinkVantage", DefaultTurnOffMonitorByThinkVantage);
+            TurnOffMonitorByThinkVantage = ConfigManager.GetValue("Setting", "TurnOffMonitorByThinkVantage", DefaultTurnOffMonitorByThinkVantage); 
             if (Version != Assembly.GetExecutingAssembly().GetName().Version.ToString())
             {
                 //Reset to default.
@@ -154,6 +169,8 @@ namespace X330Backlight.Utils
         /// <param name="acSavingModeBrightness">The brightness of  AC saving mode.</param>
         /// <param name="batterySavingModeTime">The time enter Battery saving mode. </param>
         /// <param name="batterySavingModeBrightness">The brightness of  Battery saving mode.</param>
+        /// <param name="reduceBrightnessWhenUsingBattery">If reduce the bright when battery is low</param>
+        /// <param name="reduceBrightnessWhenBatteryLow">If reduce the bright when switch to using battery</param>
         /// <param name="turnOffMonitorWay">The way to turnoff the monitor.</param>
         /// <param name="trayIconId">The trayicon ID</param>
         /// <param name="turnOffMonitorByThinkVantage">If enable ThinkVantage to turn off/on the monitor.</param>
@@ -164,6 +181,8 @@ namespace X330Backlight.Utils
             int acSavingModeBrightness = DefaultAcSavingModeBrightness,
             int batterySavingModeTime = DefaultBatterySavingModeTime,
             int batterySavingModeBrightness = DefaultBatterySavingModeBrightness,
+            bool reduceBrightnessWhenUsingBattery = DefaultReduceBrightnessWhenUsingBattery,
+            bool reduceBrightnessWhenBatteryLow = DefaultReduceBrightnessWhenBatteryLow,
             TurnOffMonitorWay turnOffMonitorWay = (TurnOffMonitorWay)DefaultTurnOffMonitorWay, 
             int trayIconId = DefaultTrayIconId,
             bool turnOffMonitorByThinkVantage = DefaultTurnOffMonitorByThinkVantage)
@@ -175,6 +194,8 @@ namespace X330Backlight.Utils
             AcSavingModeBrightness = acSavingModeBrightness;
             BatterySavingModeTime = batterySavingModeTime;
             BatterySavingModeBrightness = batterySavingModeBrightness;
+            ReduceBrightnessWhenUsingBattery = reduceBrightnessWhenUsingBattery;
+            ReduceBrightnessWhenBatteryLow = reduceBrightnessWhenBatteryLow;
             TurnOffMonitorWay = turnOffMonitorWay;
             TrayIconId = trayIconId;
             TurnOffMonitorByThinkVantage = turnOffMonitorByThinkVantage;
@@ -187,6 +208,8 @@ namespace X330Backlight.Utils
             ((IConfigUpdater)ConfigManager).SetValue("Setting", "AcSavingModeTime", AcSavingModeTime);
             ((IConfigUpdater)ConfigManager).SetValue("Setting", "AcSavingModeBrightness", AcSavingModeBrightness);
             ((IConfigUpdater)ConfigManager).SetValue("Setting", "BatterySavingModeTime", BatterySavingModeTime);
+            ((IConfigUpdater)ConfigManager).SetValue("Setting", "ReduceBrightnessWhenUsingBattery", reduceBrightnessWhenUsingBattery);
+            ((IConfigUpdater)ConfigManager).SetValue("Setting", "ReduceBrightnessWhenBatteryLow", reduceBrightnessWhenBatteryLow);
             ((IConfigUpdater)ConfigManager).SetValue("Setting", "BatterySavingModeBrightness", BatterySavingModeBrightness);
             ((IConfigUpdater)ConfigManager).SetValue("Setting", "TurnOffMonitorWay", (int)TurnOffMonitorWay);
             ((IConfigUpdater)ConfigManager).SetValue("Setting", "TrayIconId", TrayIconId);

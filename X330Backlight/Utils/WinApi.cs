@@ -11,17 +11,15 @@ namespace X330Backlight.Utils
         public const int StandardRightsRead = 0x00020000;
         public const int WmPowerbroadcast = 0x0218;
         public const int PbtPowersettingchange = 0x8013;
-        public const int ServiceControlPowerevent = 0x0000000D;
+        public const int PbtApmpowerstatuschange = 0xA;
         public const int GwlExstyle = -20;
         public const int WsExNoactivate = 0x8000000;
         public const int WmSyscommand = 0x0112;
         public const int ScMonitorpower = 0xF170;
         public const int SystemExecutionState = 16;
         public const ulong EsAwaymodeRequired = 0x00000040;
-        public const ulong EsContinuous = 0x80000000;
         public const ulong EsDisplayRequired = 0x00000002;
         public const ulong EsSystemRequired = 0x00000001;
-        public const ulong EsUserPresent = 0x00000004;
 
 
         [Flags]

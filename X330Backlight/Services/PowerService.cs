@@ -22,7 +22,7 @@ namespace X330Backlight.Services
         /// <summary>
         /// Raised when system is about to resume.
         /// </summary>
-        public event EventHandler<PowerChangeStatus> PowerChangeStatusChanged;
+        public event EventHandler<PowerChangeStatus> PowerStatusChanged;
 
 
 
@@ -36,6 +36,31 @@ namespace X330Backlight.Services
                 WinApi.GetSystemPowerStatus(out var sps);
                 return sps.LineStatus == WinApi.AcLineStatus.Online;
             }
+        }
+
+
+        /// <summary>
+        /// Gets the battery status if AcPowerPluggedin is false.
+        /// </summary>
+        public BatteryStatus BatteryStatus
+        {
+            get
+            {
+                if (WinApi.GetSystemPowerStatus(out var sps))
+                {
+                    if (sps.BatteryFlag == WinApi.BatteryFlag.High)
+                    {
+                        return BatteryStatus.High;
+                    }
+
+                    if (sps.BatteryFlag == WinApi.BatteryFlag.Low)
+                    {
+                        return BatteryStatus.Low;
+                    }
+                }
+                return BatteryStatus.Critical;
+            }
+
         }
 
         public PowerService()
@@ -57,6 +82,11 @@ namespace X330Backlight.Services
                         LidSwitchStatusChanged?.Invoke(this, setting.Data == 1? LidSwitchStatus.Opened: LidSwitchStatus.Closed);
                     }
                 }
+
+                if (wparam.ToInt32() == WinApi.PbtApmpowerstatuschange)
+                {
+                    //Check if the AC changed or battery changed.
+                }
             }
             return IntPtr.Zero;
         }
@@ -65,11 +95,11 @@ namespace X330Backlight.Services
         {
             if (e.Mode == PowerModes.Resume)
             {
-                PowerChangeStatusChanged?.Invoke(this, PowerChangeStatus.Resuming);
+                PowerStatusChanged?.Invoke(this, PowerChangeStatus.Resuming);
             }
             else if (e.Mode == PowerModes.Suspend)
             {
-                PowerChangeStatusChanged?.Invoke(this, PowerChangeStatus.Suspending);
+                PowerStatusChanged?.Invoke(this, PowerChangeStatus.Suspending);
             }
         }
 
