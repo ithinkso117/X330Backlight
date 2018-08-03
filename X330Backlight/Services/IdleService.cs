@@ -44,14 +44,14 @@ namespace X330Backlight.Services
         /// <returns>last user input(mouse or keyboard) time in ms.</returns>
         private int GetLastInputTime()
         {
-            var plii = new WinApi.LastinputInfo();
-            plii.cbSize = (uint)Marshal.SizeOf((object)plii);
-            if (!WinApi.GetLastInputInfo(ref plii))
+            var lastinputInfo = new WinApi.LastinputInfo();
+            lastinputInfo.cbSize = (uint)Marshal.SizeOf((object)lastinputInfo);
+            if (!WinApi.GetLastInputInfo(ref lastinputInfo))
             {
                 var error = WinApi.GetLastError().ToString();
                 Logger.Write($"Get last input time failed, error:{error}");
             }   
-            return (int)plii.dwTime;
+            return (int)lastinputInfo.dwTime;
         }
 
 
@@ -62,14 +62,14 @@ namespace X330Backlight.Services
         private bool IsPreventingIdle()
         {
             Array.Clear(_stateData,0,_stateData.Length);
-            var retval = WinApi.CallNtPowerInformation(
+            var result = WinApi.CallNtPowerInformation(
                 WinApi.SystemExecutionState,
                 IntPtr.Zero, 
                 0,
                 _stateData,
                 sizeof(ulong)
             );
-            if (retval == 0)
+            if (result == 0)
             {
                 var state = BitConverter.ToUInt64(_stateData, 0);
                 if (state == (WinApi.EsDisplayRequired | WinApi.EsSystemRequired))
