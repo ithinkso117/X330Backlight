@@ -109,7 +109,6 @@
       <DependentUpon>SettingWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\SavingModeTimeViewModel.cs" />
-    <Compile Include="TaskbarIconViewModel.cs" />
     <Compile Include="Utils\AutoStartHelper.cs" />
     <Compile Include="Utils\Configuration\ConfigLoader.cs" />
     <Compile Include="Utils\Configuration\ConfigManager.cs" />
