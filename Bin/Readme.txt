@@ -2,7 +2,7 @@ Windows10下直接解压到任意目录运行X330Backlight.exe，第一次运行会显示设置程序，按
 Windows7下请先安装.NET Framework 4.6.1, 下载地址：https://www.microsoft.com/zh-CN/download/details.aspx?id=49982
 
 更新历史
-2018-08-04 V1.0.1
+2018-08-04 V1.0.0.1
 1. 新增播放电影或听音乐时不进入省电模式，需要多媒体播放器支持向系统申请禁止进入省电或待机模式。
 2. 修复一处语言翻译错误问题。
 
