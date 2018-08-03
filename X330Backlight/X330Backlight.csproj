@@ -65,6 +65,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -107,7 +108,8 @@
     <Compile Include="Settings\SettingWindow.xaml.cs">
       <DependentUpon>SettingWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\TimeViewModel.cs" />
+    <Compile Include="Settings\SavingModeTimeViewModel.cs" />
+    <Compile Include="TaskbarIconViewModel.cs" />
     <Compile Include="Utils\AutoStartHelper.cs" />
     <Compile Include="Utils\Configuration\ConfigLoader.cs" />
     <Compile Include="Utils\Configuration\ConfigManager.cs" />
@@ -116,24 +118,10 @@
     <Compile Include="Utils\Configuration\TokenHelper.cs" />
     <Compile Include="Utils\HID.cs" />
     <Compile Include="Utils\Logger.cs" />
-    <Compile Include="Utils\NotifyIcon\Interop\IconDataMembers.cs" />
-    <Compile Include="Utils\NotifyIcon\Interop\MouseEvent.cs" />
-    <Compile Include="Utils\NotifyIcon\Interop\NotifyCommand.cs" />
-    <Compile Include="Utils\NotifyIcon\Interop\NotifyIconData.cs" />
-    <Compile Include="Utils\NotifyIcon\Interop\NotifyIconVersion.cs" />
-    <Compile Include="Utils\NotifyIcon\Interop\Point.cs" />
-    <Compile Include="Utils\NotifyIcon\Interop\WinApi.cs" />
-    <Compile Include="Utils\NotifyIcon\Interop\WindowClass.cs" />
-    <Compile Include="Utils\NotifyIcon\Interop\WindowMessageSink.cs" />
-    <Compile Include="Utils\NotifyIcon\ITaskbarIcon.cs" />
-    <Compile Include="Utils\NotifyIcon\PopupActivationMode.cs" />
-    <Compile Include="Utils\NotifyIcon\TaskbarIcon.cs" />
-    <Compile Include="Utils\NotifyIcon\TaskbarIcon.Declarations.cs" />
-    <Compile Include="Utils\NotifyIcon\Util.cs" />
     <Compile Include="Utils\SettingManager.cs" />
     <Compile Include="Utils\TranslateHelper.cs" />
     <Compile Include="Utils\TranslaterExtension.cs" />
-    <Compile Include="Utils\TrunOffMonitorWay.cs" />
+    <Compile Include="Utils\TurnOffMonitorWay.cs" />
     <Compile Include="Utils\WinApi.cs" />
     <Page Include="CirculaOsdWindow.xaml">
       <SubType>Designer</SubType>
@@ -209,6 +197,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Arrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Exit.png" />
+    <Resource Include="Resources\Setting.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

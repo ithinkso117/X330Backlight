@@ -2,11 +2,18 @@
 
 namespace X330Backlight.Settings
 {
-    internal class TimeViewModel
+    internal class SavingModeTimeViewModel
     {
+        /// <summary>
+        /// Gets the time of entering SavingModeTime the unit is millisecond
+        /// </summary>
         public int Time { get; }
 
-        public TimeViewModel(int time)
+        /// <summary>
+        /// Create the SavingModeTimeViewModel
+        /// </summary>
+        /// <param name="time">The time entering saving mode, unit is millisecond</param>
+        public SavingModeTimeViewModel(int time)
         {
             Time = time;
         }

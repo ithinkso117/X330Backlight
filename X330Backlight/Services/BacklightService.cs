@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using X330Backlight.Services.Interfaces;
 using X330Backlight.Utils;
 
@@ -10,8 +11,13 @@ namespace X330Backlight.Services
         private const ushort Vid = 4292;
         private const ushort Pid = 33742;
 
+        private readonly object _brightnessLocker = new object();
+
         private uint _deviceId;
         private int _brightness;
+
+        private readonly ManualResetEvent _eventTerminate = new ManualResetEvent(false);
+        private Thread _monitorThread;
 
 
 
@@ -71,13 +77,13 @@ namespace X330Backlight.Services
         /// </summary>
         public void TurnOnBacklight()
         {
-            if (SettingManager.TrunOffMonitorWay == TrunOffMonitorWay.ZeroBrightness)
+            if (SettingManager.TurnOffMonitorWay == TurnOffMonitorWay.ZeroBrightness)
             {
                 var brightness = LoadBrightness();
                 Brightness = brightness;
                 BacklightClosed = false;
             }
-            else if(SettingManager.TrunOffMonitorWay == TrunOffMonitorWay.TurnOff)
+            else if(SettingManager.TurnOffMonitorWay == TurnOffMonitorWay.TurnOff)
             {
                 //TrunOn the monitor
                 if (Owner != null)
@@ -93,15 +99,15 @@ namespace X330Backlight.Services
         /// <summary>
         /// Save current brightness and close the backlight
         /// </summary>
-        public void TrunOffBacklight()
+        public void TurnOffBacklight()
         {
-            if (SettingManager.TrunOffMonitorWay == TrunOffMonitorWay.ZeroBrightness)
+            if (SettingManager.TurnOffMonitorWay == TurnOffMonitorWay.ZeroBrightness)
             {
                 SaveBrightness();
                 Brightness = 0;
                 BacklightClosed = true;
             }
-            else if(SettingManager.TrunOffMonitorWay == TrunOffMonitorWay.TurnOff)
+            else if(SettingManager.TurnOffMonitorWay == TurnOffMonitorWay.TurnOff)
             {
                 //Close the monitor.
                 if (Owner != null)
@@ -148,20 +154,23 @@ namespace X330Backlight.Services
             {
                 if (HID.IsOpened(_deviceId) > 0)
                 {
-                    var reportBufferLength = HID.GetFeatureReportBufferLength(_deviceId);
-                    var buffer = new byte[reportBufferLength];
-                    int retryTimes = 3;
-                    while (retryTimes > 0)
+                    lock (_brightnessLocker)
                     {
-                        --retryTimes;
-                        buffer[0] = 6;
-                        buffer[1] = (byte)(value * 16);
-                        if (HID.SetFeatureReport_Control(_deviceId, ref buffer[0], reportBufferLength) == 0 &&
-                            HID.GetFeatureReport_Control(_deviceId, ref buffer[0], reportBufferLength) == 0 && 
-                            buffer[1] == 1)
+                        var reportBufferLength = HID.GetFeatureReportBufferLength(_deviceId);
+                        var buffer = new byte[reportBufferLength];
+                        int retryTimes = 3;
+                        while (retryTimes > 0)
                         {
-                            retryTimes = 0;
-                            result = true;
+                            --retryTimes;
+                            buffer[0] = 6;
+                            buffer[1] = (byte) (value * 16);
+                            if (HID.SetFeatureReport_Control(_deviceId, ref buffer[0], reportBufferLength) == 0 &&
+                                HID.GetFeatureReport_Control(_deviceId, ref buffer[0], reportBufferLength) == 0 &&
+                                buffer[1] == 1)
+                            {
+                                retryTimes = 0;
+                                result = true;
+                            }
                         }
                     }
                 }
@@ -172,6 +181,54 @@ namespace X330Backlight.Services
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Read the brightness from the HID device.
+        /// </summary>
+        /// <returns>If the brightness changed, it will return the brightness, otherwise return -1.</returns>
+        private int ReadBrightness()
+        {
+            try
+            {
+                if (HID.IsOpened(_deviceId) > 0)
+                {
+                    lock (_brightnessLocker)
+                    {
+                        var reportBufferLength = HID.GetInputReportBufferLength(_deviceId);
+                        var maxReportRequest = HID.GetMaxReportRequest(_deviceId);
+                        var bufferSize = reportBufferLength * maxReportRequest;
+                        var buffer = new byte[bufferSize];
+                        var bytesReturned = 0u;
+                        var inputReportInterrupt = HID.GetInputReport_Interrupt(_deviceId, ref buffer[0], bufferSize,
+                            maxReportRequest, ref bytesReturned);
+                        if (inputReportInterrupt == 0 || inputReportInterrupt == 4)
+                        {
+                            var brightness = -1;
+                            var receivedLength = 0;
+                            while (receivedLength < bytesReturned)
+                            {
+                                if (buffer[receivedLength] == 4)
+                                {
+                                    brightness = buffer[receivedLength + 1];
+                                }
+
+                                receivedLength += reportBufferLength;
+                            }
+
+                            if (brightness >= 0)
+                            {
+                                return brightness;
+                            }
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Logger.Write($"Read brightness from HID failed. error:{ex}");
+            }
+            return -1;
         }
 
 
@@ -196,6 +253,36 @@ namespace X330Backlight.Services
             }
             //Load saved brightness
             Brightness = LoadBrightness();
+
+            _eventTerminate.Reset();
+            _monitorThread = new Thread(StartMonitorBrightness);
+            _monitorThread.Start();
+
+        }
+
+        /// <summary>
+        /// Check the brightness changed, it could be changed by press the power button.
+        /// </summary>
+        private void StartMonitorBrightness()
+        {
+            while (!_eventTerminate.WaitOne(200))
+            {
+                try
+                {
+                    if (_deviceId != 0)
+                    {
+                        var brightness = ReadBrightness();
+                        if (brightness != -1)
+                        {
+                            Brightness = brightness;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Write($"Monitor brightness error:{ex}");
+                }
+            }
         }
 
 
@@ -204,6 +291,23 @@ namespace X330Backlight.Services
         /// </summary>
         public override void Stop()
         {
+            //Close the monitor thread.
+            _eventTerminate.Set();
+            if (_monitorThread != null)
+            {
+                if (!_monitorThread.Join(StopTimeout))
+                {
+                    try
+                    {
+                        _monitorThread.Abort();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Write($"Stop the monitor thread error:{ex}");
+                    }
+                }
+                _monitorThread = null;
+            }
             if (_deviceId != 0)
             {
                 //Close the HID

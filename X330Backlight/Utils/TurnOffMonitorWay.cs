@@ -1,6 +1,6 @@
 ﻿namespace X330Backlight.Utils
 {
-    public enum TrunOffMonitorWay
+    public enum TurnOffMonitorWay
     {
         /// <summary>
         /// Reduce the brightness to zero.

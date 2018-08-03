@@ -40,7 +40,7 @@ namespace X330Backlight.Services.Interfaces
         /// <summary>
         /// Save current brightness and close the backlight
         /// </summary>
-        void TrunOffBacklight();
+        void TurnOffBacklight();
 
 
         /// <summary>

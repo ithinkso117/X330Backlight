@@ -13,12 +13,16 @@ namespace X330Backlight.Settings
         private TrayIconViewModel _selectedTrayIcon;
         private bool _autoStart;
         private OsdTimeoutViewModel _selectedOsdTimeout;
-        private TimeViewModel _selectedAcSavingModeTime;
-        private TimeViewModel _selectedBatterySavingModeTime;
+        private SavingModeTimeViewModel _selectedAcSavingModeTime;
+        private SavingModeTimeViewModel _selectedBatterySavingModeTime;
         private TurnOffMonitorWayViewModel _selectedTurnOffMonitorWay;
         private bool _enableThinkVantage;
         public event PropertyChangedEventHandler PropertyChanged;
 
+
+        /// <summary>
+        /// Gets or sets if auto start.
+        /// </summary>
         public bool AutoStart
         {
             get => _autoStart;
@@ -32,8 +36,14 @@ namespace X330Backlight.Settings
             }
         }
 
+        /// <summary>
+        /// Gets all available OsdStyles.
+        /// </summary>
         public IReadOnlyList<OsdStyleViewModel> OsdStyles { get; }
 
+        /// <summary>
+        /// Gets or sets the selected OsdStyle.
+        /// </summary>
         public OsdStyleViewModel SelectedOsdStyles
         {
             get => _selectedOsdStyles;
@@ -47,8 +57,15 @@ namespace X330Backlight.Settings
             }
         }
 
+        /// <summary>
+        /// Gets all Osd timeout values.
+        /// </summary>
         public IReadOnlyList<OsdTimeoutViewModel> OsdTimeouts { get; }
 
+
+        /// <summary>
+        /// Gets or sets the selected osd timeout.
+        /// </summary>
         public OsdTimeoutViewModel SelectedOsdTimeout
         {
             get => _selectedOsdTimeout;
@@ -62,9 +79,15 @@ namespace X330Backlight.Settings
             }
         }
 
-        public IReadOnlyList<TimeViewModel> SavingModeTimes { get; }
+        /// <summary>
+        /// Gets all available saving mode times.
+        /// </summary>
+        public IReadOnlyList<SavingModeTimeViewModel> SavingModeTimes { get; }
 
-        public TimeViewModel SelectedAcSavingModeTime
+        /// <summary>
+        /// Gets or sets the selected AC saving mode time.
+        /// </summary>
+        public SavingModeTimeViewModel SelectedAcSavingModeTime
         {
             get => _selectedAcSavingModeTime;
             set
@@ -77,7 +100,10 @@ namespace X330Backlight.Settings
             }
         }
 
-        public TimeViewModel SelectedBatterySavingModeTime
+        /// <summary>
+        /// Gets or sets the selected Battery saving mode time.
+        /// </summary>
+        public SavingModeTimeViewModel SelectedBatterySavingModeTime
         {
             get => _selectedBatterySavingModeTime;
             set
@@ -90,8 +116,15 @@ namespace X330Backlight.Settings
             }
         }
 
+        /// <summary>
+        /// Gets all available TurnOffMonitorWays;
+        /// </summary>
         public IReadOnlyList<TurnOffMonitorWayViewModel> TurnOffMonitorWays { get; }
 
+
+        /// <summary>
+        /// Gets or sets the selected TurnOffMonitorWay.
+        /// </summary>
         public TurnOffMonitorWayViewModel SelectedTurnOffMonitorWay
         {
             get => _selectedTurnOffMonitorWay;
@@ -105,8 +138,15 @@ namespace X330Backlight.Settings
             }
         }
 
+
+        /// <summary>
+        /// Gets all available trayicons.
+        /// </summary>
         public IReadOnlyList<TrayIconViewModel> TrayIcons { get; }
 
+        /// <summary>
+        /// Gets or sets the selected tray icon.
+        /// </summary>
         public TrayIconViewModel SelectedTrayIcon
         {
             get => _selectedTrayIcon;
@@ -120,6 +160,10 @@ namespace X330Backlight.Settings
             }
         }
 
+
+        /// <summary>
+        /// Gets or sets if enable the ThinkVantage
+        /// </summary>
         public bool EnableThinkVantage
         {
             get => _enableThinkVantage;
@@ -137,8 +181,8 @@ namespace X330Backlight.Settings
         {
             OsdStyles = new List<OsdStyleViewModel>()
             {
-                new OsdStyleViewModel(TranslateHelper.Translate("OSD1"),1),
-                new OsdStyleViewModel(TranslateHelper.Translate("OSD2"),2)
+                new OsdStyleViewModel("OSD1",1),
+                new OsdStyleViewModel("OSD2",2)
             };
 
             OsdTimeouts = new List<OsdTimeoutViewModel>()
@@ -150,24 +194,24 @@ namespace X330Backlight.Settings
                 new OsdTimeoutViewModel(5),
             };
 
-            SavingModeTimes = new List<TimeViewModel>()
+            SavingModeTimes = new List<SavingModeTimeViewModel>()
             {
-                new TimeViewModel(60000),
-                new TimeViewModel(120000),
-                new TimeViewModel(180000),
-                new TimeViewModel(300000),
-                new TimeViewModel(600000),
-                new TimeViewModel(900000),
-                new TimeViewModel(1200000),
-                new TimeViewModel(1500000),
-                new TimeViewModel(1800000),
-                new TimeViewModel(2700000),
-                new TimeViewModel(3600000),
-                new TimeViewModel(7200000),
-                new TimeViewModel(10800000),
-                new TimeViewModel(14400000),
-                new TimeViewModel(18000000),
-                new TimeViewModel(0),
+                new SavingModeTimeViewModel(60000),
+                new SavingModeTimeViewModel(120000),
+                new SavingModeTimeViewModel(180000),
+                new SavingModeTimeViewModel(300000),
+                new SavingModeTimeViewModel(600000),
+                new SavingModeTimeViewModel(900000),
+                new SavingModeTimeViewModel(1200000),
+                new SavingModeTimeViewModel(1500000),
+                new SavingModeTimeViewModel(1800000),
+                new SavingModeTimeViewModel(2700000),
+                new SavingModeTimeViewModel(3600000),
+                new SavingModeTimeViewModel(7200000),
+                new SavingModeTimeViewModel(10800000),
+                new SavingModeTimeViewModel(14400000),
+                new SavingModeTimeViewModel(18000000),
+                new SavingModeTimeViewModel(0),
             };
 
             TurnOffMonitorWays = new List<TurnOffMonitorWayViewModel>()
@@ -187,22 +231,41 @@ namespace X330Backlight.Settings
             LoadSettings();
         }
 
-        public void LoadSettings()
+
+        /// <summary>
+        /// Initialize all properties from SettingManager.
+        /// </summary>
+        private void LoadSettings()
         {
             AutoStart = SettingManager.AutoStart;
             SelectedOsdStyles = OsdStyles.First(x => x.StyleId == SettingManager.OsdStyle);
             SelectedOsdTimeout = OsdTimeouts.FirstOrDefault(x => x.Time == SettingManager.OsdTimeout);
             SelectedAcSavingModeTime = SavingModeTimes.First(x => x.Time == SettingManager.AcSavingModeTime);
             SelectedBatterySavingModeTime = SavingModeTimes.First(x => x.Time == SettingManager.BatterySavingModeTime);
-            SelectedTurnOffMonitorWay = TurnOffMonitorWays.First(x => x.Way == (int)SettingManager.TrunOffMonitorWay);
+            SelectedTurnOffMonitorWay = TurnOffMonitorWays.First(x => x.Way == (int)SettingManager.TurnOffMonitorWay);
             SelectedTrayIcon = TrayIcons.First(x => x.Id == SettingManager.TrayIconId);
-            EnableThinkVantage = SettingManager.TrunOffMonitorByThinkVantage;
+            EnableThinkVantage = SettingManager.TurnOffMonitorByThinkVantage;
         }
 
+        /// <summary>
+        /// Save all settings and reload them.
+        /// </summary>
         public void SaveSettings()
         {
-
+            SettingManager.UpdateSettings(
+                AutoStart, 
+                SelectedOsdStyles.StyleId, 
+                SelectedOsdTimeout.Time, 
+                SelectedAcSavingModeTime.Time,
+                batterySavingModeTime:SelectedBatterySavingModeTime.Time,
+                turnOffMonitorWay:(TurnOffMonitorWay)SelectedTurnOffMonitorWay.Way,
+                trayIconId:SelectedTrayIcon.Id,
+                turnOffMonitorByThinkVantage:EnableThinkVantage
+                );
+            //Notify the main app to reload the settings.
+            SettingManager.NotifySettingsChanged();
         }
+
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

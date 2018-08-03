@@ -74,7 +74,7 @@ namespace X330Backlight
                     backlightService.TurnOnBacklight();
                     break;
                 case LidSwitchStatus.Closed:
-                    backlightService.TrunOffBacklight();
+                    backlightService.TurnOffBacklight();
                     break;
             }
         }
@@ -130,7 +130,7 @@ namespace X330Backlight
                     backlightService.SaveBrightness();
                     break;
                 case TpHotKey.ThinkVantage:
-                    if (SettingManager.TrunOffMonitorByThinkVantage)
+                    if (SettingManager.TurnOffMonitorByThinkVantage)
                     {
                         if (backlightService.BacklightClosed)
                         {
@@ -138,7 +138,7 @@ namespace X330Backlight
                         }
                         else
                         {
-                            backlightService.TrunOffBacklight();
+                            backlightService.TurnOffBacklight();
                         }
                     }
                     break;
@@ -166,6 +166,8 @@ namespace X330Backlight
             var powerService = ServiceManager.GetService<IPowerService>();
             powerService.LidSwitchStatusChanged -= OnLidSwitchStatusChanged;
             powerService.PowerChangeStatusChanged -= OnPowerChangeStatusChanged;
+
+            ServiceManager.Clear();
         }
     }
 }

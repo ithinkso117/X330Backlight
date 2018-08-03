@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Threading;
+﻿using System.Windows;
 
 namespace X330Backlight.Settings
 {
@@ -24,22 +21,15 @@ namespace X330Backlight.Settings
         }
 
 
-        public void ShowSettingWindow()
-        {
-            _settingViewModel.LoadSettings();
-            Show();
-        }
-
-
         private void OnCloseButtonClicked(object sender, RoutedEventArgs e)
         {
-            Hide();
+            Close();
         }
 
         private void OnSaveButtonClicked(object sender, RoutedEventArgs e)
         {
             _settingViewModel.SaveSettings();
-            Hide();
+            Close();
         }
     }
 }

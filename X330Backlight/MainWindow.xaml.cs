@@ -3,7 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Input;
+using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -11,7 +11,6 @@ using X330Backlight.Services;
 using X330Backlight.Services.Interfaces;
 using X330Backlight.Settings;
 using X330Backlight.Utils;
-using X330Backlight.Utils.NotifyIcon;
 
 namespace X330Backlight
 {
@@ -25,8 +24,10 @@ namespace X330Backlight
 
         private readonly string _currentExeFilePath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
 
-        private TaskbarIcon _taskbarIcon;
-        private Bitmap _iconBitmap;
+        private NotifyIcon _notifyIcon;
+        private int _currentTrayIconId;
+        private Bitmap _settingBitmap;
+        private Bitmap _exitBitmap;
 
         private SettingWindow _settingWindow;
         private OsdWindow _osdWindow;
@@ -35,9 +36,30 @@ namespace X330Backlight
         {
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            //Handle auto start.
+            SettingManager.SettingsChanged += OnSettingsChanged;
+            HandleAutoStart();
+        }
+
+
+
+        //Handle auto start.
+        private void HandleAutoStart()
+        {
             var appName = TranslateHelper.Translate("AppName");
             AutoStartHelper.AutoStart(appName, _currentExeFilePath, SettingManager.AutoStart);
+        }
+
+
+        /// <summary>
+        /// When settings changed, restart all functuons.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSettingsChanged(object sender, EventArgs e)
+        {
+            HandleAutoStart();
+            StopAllFunctions();
+            StartAllFunctions();
         }
 
         /// <summary>
@@ -62,26 +84,56 @@ namespace X330Backlight
         /// </summary>
         public void StartAllFunctions()
         {
-            //For avoding duplicated start.
-            StopAllFunctions();
-
             Logger.Write("Starting functions...");
             Logger.Write("Creating MainService...");
             _mainService = new MainService(_hwndSource);
-            
+
             Logger.Write("Creating OSD window...");
-            if (SettingManager.OsdStyle == 0)
+            if (SettingManager.OsdStyle == 1)
             {
                 _osdWindow = new DefaultOsdWindow();
             }
-            else if (SettingManager.OsdStyle == 1)
+            else if (SettingManager.OsdStyle == 2)
             {
                 _osdWindow = new CirculaOsdWindow();
             }
 
-            if (SettingManager.TrayIconId > 0)
+            if (_notifyIcon == null)
             {
                 Logger.Write("Creating TrayIcon...");
+                var settingImageUri = @"pack://application:,,,/"
+                                      + Assembly.GetExecutingAssembly().GetName().Name
+                                      + ";component/"
+                                      + "Resources/Setting.png";
+                var exitImageUri = @"pack://application:,,,/"
+                                   + Assembly.GetExecutingAssembly().GetName().Name
+                                   + ";component/"
+                                   + "Resources/Exit.png";
+                var settingBitmapImage = new BitmapImage(new Uri(settingImageUri, UriKind.Absolute));
+                var exitBitmapImage = new BitmapImage(new Uri(exitImageUri, UriKind.Absolute));
+
+                _settingBitmap = ImageToBitmap(settingBitmapImage);
+                _exitBitmap = ImageToBitmap(exitBitmapImage);
+                _notifyIcon = new NotifyIcon
+                {
+                    ContextMenuStrip = new ContextMenuStrip()
+                };
+                _notifyIcon.ContextMenuStrip.Items.Add(new ToolStripMenuItem(TranslateHelper.Translate("Setting"),
+                    _settingBitmap, (s, e) => ShowSettingWindow()));
+                _notifyIcon.ContextMenuStrip.Items.Add(new ToolStripMenuItem(TranslateHelper.Translate("Exit"),
+                    _exitBitmap, (s, e) => Close()));
+                _notifyIcon.DoubleClick += OnNotifyIconDoubleClick;
+            }
+
+            _notifyIcon.Visible = SettingManager.TrayIconId > 0;
+            if (_notifyIcon.Visible && _currentTrayIconId != SettingManager.TrayIconId)
+            {
+                _currentTrayIconId = SettingManager.TrayIconId;
+                if (_notifyIcon.Icon != null)
+                {
+                    _notifyIcon.Icon.Dispose();
+                    _notifyIcon.Icon = null;
+                }
                 var icon = System.Drawing.Icon.ExtractAssociatedIcon(_currentExeFilePath);
                 var iconUri = @"pack://application:,,,/"
                               + Assembly.GetExecutingAssembly().GetName().Name
@@ -91,34 +143,57 @@ namespace X330Backlight
                 {
                     var iconImageUri = new Uri(iconUri, UriKind.Absolute);
                     var imageSource = new BitmapImage(iconImageUri);
-                    _iconBitmap = ImageToBitmap(imageSource);
-                    icon = System.Drawing.Icon.FromHandle(_iconBitmap.GetHicon());
+                    var iconBitmap = ImageToBitmap(imageSource);
+                    icon = System.Drawing.Icon.FromHandle(iconBitmap.GetHicon());
+                    iconBitmap.Dispose();
                 }
                 catch (Exception ex)
                 {
                     Logger.Write($"GetIcon from {iconUri} failed, error:{ex}");
                 }
-                
-                _taskbarIcon = new TaskbarIcon { Icon = icon};
-                _taskbarIcon.DoubleClicked += OnTaskbarIconDoubleClicked;
+                _notifyIcon.Icon = icon;
+
                 var backlightService = ServiceManager.GetService<IBacklightService>();
                 backlightService.BrightnessChanged += OnBrightnessChanged;
                 OnBrightnessChanged(backlightService, EventArgs.Empty);
             }
 
-            _settingWindow = new SettingWindow();
-
             Logger.Write("All functions started.");
         }
 
+
         /// <summary>
-        /// Show setting window.
+        /// Show the setting window.
+        /// </summary>
+        private void ShowSettingWindow()
+        {
+            if (_settingWindow == null)
+            {
+                _settingWindow = new SettingWindow();
+                _settingWindow.Closed += OnSettingWindowClosed;
+            }
+            _settingWindow.Show();
+        }
+
+
+        /// <summary>
+        /// Handle double click trayicon event.
+        /// </summary>
+        private void OnNotifyIconDoubleClick(object sender, EventArgs e)
+        {
+            ShowSettingWindow();
+        }
+
+
+        /// <summary>
+        /// When setting window closed, set it to null.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnTaskbarIconDoubleClicked(object sender, EventArgs e)
+        private void OnSettingWindowClosed(object sender, EventArgs e)
         {
-            _settingWindow.ShowSettingWindow();
+            _settingWindow.Closed -= OnSettingWindowClosed;
+            _settingWindow = null;
         }
 
         /// <summary>
@@ -127,14 +202,10 @@ namespace X330Backlight
         public void StopAllFunctions()
         {
             Logger.Write("Stopping functions...");
-            if (_taskbarIcon != null)
+            if (_notifyIcon != null && _notifyIcon.Visible)
             {
                 var backlightService = ServiceManager.GetService<IBacklightService>();
                 backlightService.BrightnessChanged -= OnBrightnessChanged;
-                _taskbarIcon.Dispose();
-                _taskbarIcon = null;
-                _iconBitmap?.Dispose();
-                _iconBitmap = null;
             }
             if (_osdWindow != null)
             {
@@ -155,25 +226,43 @@ namespace X330Backlight
             Logger.Write("Starting application.");
             StartAllFunctions();
             Logger.Write("Application started.");
+            if (SettingManager.IsFirstRun)
+            {
+                if (_settingWindow == null)
+                {
+                    _settingWindow = new SettingWindow();
+                    _settingWindow.Closed += OnSettingWindowClosed;
+                }
+                _settingWindow.Show();
+            }
         }
 
         private void OnBrightnessChanged(object sender, EventArgs e)
         {
-            var backlightService = ServiceManager.GetService<IBacklightService>();
-            var brightness = backlightService.Brightness;
-            if (_taskbarIcon != null)
+            if (_notifyIcon != null)
             {
+                var backlightService = ServiceManager.GetService<IBacklightService>();
+                var brightness = backlightService.Brightness;
+                var displayText = $"{TranslateHelper.Translate("CurrentBrightness")}: {brightness}";
                 Dispatcher.Invoke(() =>
                 {
-                    _taskbarIcon.ToolTipText =
-                        $"{TranslateHelper.Translate("CurrentBrightness")}: {brightness}";
+                    _notifyIcon.Text = displayText;
                 });
-
             }
         }
 
         protected override void OnClosed(EventArgs e)
         {
+            _settingWindow?.Close();
+
+            _notifyIcon?.Dispose();
+            _notifyIcon = null;
+
+            _exitBitmap?.Dispose();
+            _exitBitmap = null;
+            _settingBitmap?.Dispose();
+            _settingBitmap = null;
+
             StopAllFunctions();
             base.OnClosed(e);
         }
