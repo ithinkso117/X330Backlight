@@ -16,6 +16,12 @@ namespace X330Backlight.Utils
         public const int WsExNoactivate = 0x8000000;
         public const int WmSyscommand = 0x0112;
         public const int ScMonitorpower = 0xF170;
+        public const int SystemExecutionState = 16;
+        public const ulong EsAwaymodeRequired = 0x00000040;
+        public const ulong EsContinuous = 0x80000000;
+        public const ulong EsDisplayRequired = 0x00000002;
+        public const ulong EsSystemRequired = 0x00000001;
+        public const ulong EsUserPresent = 0x00000004;
 
 
         [Flags]
@@ -111,5 +117,8 @@ namespace X330Backlight.Utils
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr SendMessage(IntPtr hWnd, int msg, int wParam, int lParam);
+
+        [DllImport("powrprof.dll", SetLastError = true)]
+        public static extern uint CallNtPowerInformation(int informationLevel, IntPtr lpInputBuffer, int nInputBufferSize, byte[] lpOutputBuffer, int nOutputBufferSize);
     }
 }

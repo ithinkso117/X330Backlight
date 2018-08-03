@@ -10,6 +10,8 @@ namespace X330Backlight.Services
     {
         private readonly ManualResetEvent _eventTerminate = new ManualResetEvent(false);
 
+        private readonly byte[] _stateData = new byte[sizeof(ulong)];
+
         private bool _isIdle;
 
         private Thread _checkIdleStateThread;
@@ -54,6 +56,32 @@ namespace X330Backlight.Services
 
 
         /// <summary>
+        /// Gets if someone(player) is preventing enter idle.
+        /// </summary>
+        /// <returns></returns>
+        private bool IsPreventingIdle()
+        {
+            Array.Clear(_stateData,0,_stateData.Length);
+            var retval = WinApi.CallNtPowerInformation(
+                WinApi.SystemExecutionState,
+                IntPtr.Zero, 
+                0,
+                _stateData,
+                sizeof(ulong)
+            );
+            if (retval == 0)
+            {
+                var state = BitConverter.ToUInt64(_stateData, 0);
+                if (state == (WinApi.EsDisplayRequired | WinApi.EsSystemRequired))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        /// <summary>
         /// The thread proce to check is system enter the idle state.
         /// </summary>
         private void StartCheckIdleState()
@@ -85,7 +113,7 @@ namespace X330Backlight.Services
             var lastInputTime = GetLastInputTime();
             var currentTime = Environment.TickCount;
             var timeElapsed = currentTime - lastInputTime;
-            IsIdle = timeElapsed >= idleTime;
+            IsIdle = timeElapsed >= idleTime && !IsPreventingIdle();
         }
 
         /// <summary>
@@ -126,6 +154,5 @@ namespace X330Backlight.Services
                 _checkIdleStateThread = null;
             }
         }
-
     }
 }
