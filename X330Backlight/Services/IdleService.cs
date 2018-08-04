@@ -112,10 +112,18 @@ namespace X330Backlight.Services
             {
                 idleTime = SettingManager.BatterySavingModeTime;
             }
-            var lastInputTime = GetLastInputTime();
-            var currentTime = Environment.TickCount;
-            var timeElapsed = currentTime - lastInputTime;
-            IsIdle = timeElapsed >= idleTime && !IsPreventingIdle();
+
+            if (idleTime > 0)
+            {
+                var lastInputTime = GetLastInputTime();
+                var currentTime = Environment.TickCount;
+                var timeElapsed = currentTime - lastInputTime;
+                IsIdle = timeElapsed >= idleTime && !IsPreventingIdle();
+            }
+            else
+            {
+                IsIdle = false;
+            }
         }
 
         /// <summary>

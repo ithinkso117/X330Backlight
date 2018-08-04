@@ -117,6 +117,9 @@ namespace X330Backlight
                 _notifyIcon = new NotifyIcon
                 {
                     ContextMenuStrip = new ContextMenuStrip()
+                    {
+                        Renderer =  new MenuRenderer()
+                    }
                 };
                 _notifyIcon.ContextMenuStrip.Items.Add(new ToolStripMenuItem(TranslateHelper.Translate("Setting"),
                     _settingBitmap, (s, e) => ShowSettingWindow()));

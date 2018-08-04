@@ -87,6 +87,7 @@
     <Compile Include="DefaultOsdWindow.xaml.cs">
       <DependentUpon>DefaultOsdWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MenuRenderer.cs" />
     <Compile Include="OsdWindow.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Services\BacklightService.cs" />
