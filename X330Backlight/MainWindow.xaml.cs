@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using System.Net.Cache;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using X330Backlight.Services;
 using X330Backlight.Services.Interfaces;
@@ -68,7 +66,7 @@ namespace X330Backlight
         /// <returns>The created bitmap.</returns>
         private Bitmap ImageToBitmap(BitmapImage image)
         {
-            var encoder = new BmpBitmapEncoder();
+            var encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(image));
             using (var stream = new MemoryStream())
             {

@@ -281,6 +281,7 @@ namespace X330Backlight.Services
                         if (brightness != -1)
                         {
                             Brightness = brightness;
+                            SaveBrightness();
                         }
                     }
                 }
