@@ -14,6 +14,8 @@ namespace X330Backlight.Services
 
         private bool _isIdle;
 
+        private int _startTime;
+
         private Thread _checkIdleStateThread;
 
         /// <summary>
@@ -116,8 +118,12 @@ namespace X330Backlight.Services
             if (idleTime > 0)
             {
                 var lastInputTime = GetLastInputTime();
+                if (lastInputTime > _startTime)
+                {
+                    _startTime = lastInputTime;
+                }
                 var currentTime = Environment.TickCount;
-                var timeElapsed = currentTime - lastInputTime;
+                var timeElapsed = currentTime - _startTime;
                 IsIdle = timeElapsed >= idleTime && !IsPreventingIdle();
             }
             else
@@ -131,6 +137,7 @@ namespace X330Backlight.Services
         /// </summary>
         public override void Start()
         {
+            _startTime = Environment.TickCount;
             if (_checkIdleStateThread != null)
             {
                 Stop();

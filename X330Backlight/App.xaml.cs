@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using System.Windows;
 
 namespace X330Backlight
@@ -11,5 +8,19 @@ namespace X330Backlight
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            Mutex mutex = new Mutex(true, "X330Backlight", out var isRunning);
+            if (isRunning)
+            {
+                MainWindow = new MainWindow();
+                MainWindow.ShowDialog();
+                mutex.ReleaseMutex();
+            }
+            else
+            {
+                Shutdown(0);
+            }
+        }
     }
 }

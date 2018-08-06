@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Net.Cache;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Forms;
+using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using X330Backlight.Services;
 using X330Backlight.Services.Interfaces;
 using X330Backlight.Settings;
+using X330Backlight.TaskbarIcons;
+using X330Backlight.TaskbarIcons.TaskbarIcon;
 using X330Backlight.Utils;
 
 namespace X330Backlight
@@ -24,11 +27,7 @@ namespace X330Backlight
 
         private readonly string _currentExeFilePath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
 
-        private NotifyIcon _notifyIcon;
-        private int _currentTrayIconId;
-        private Bitmap _settingBitmap;
-        private Bitmap _exitBitmap;
-
+        private TaskbarIcon _taskbarIcon;
         private SettingWindow _settingWindow;
         private OsdWindow _osdWindow;
 
@@ -67,10 +66,10 @@ namespace X330Backlight
         /// </summary>
         /// <param name="image">Image to convert.</param>
         /// <returns>The created bitmap.</returns>
-        private Bitmap ImageToBitmap(ImageSource image)
+        private Bitmap ImageToBitmap(BitmapImage image)
         {
-            var encoder = new PngBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create((BitmapImage)image));
+            var encoder = new BmpBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(image));
             using (var stream = new MemoryStream())
             {
                 encoder.Save(stream);
@@ -98,45 +97,9 @@ namespace X330Backlight
                 _osdWindow = new CirculaOsdWindow();
             }
 
-            if (_notifyIcon == null)
+            if (_taskbarIcon == null && SettingManager.TrayIconId > 0)
             {
                 Logger.Write("Creating TrayIcon...");
-                var settingImageUri = @"pack://application:,,,/"
-                                      + Assembly.GetExecutingAssembly().GetName().Name
-                                      + ";component/"
-                                      + "Resources/Setting.png";
-                var exitImageUri = @"pack://application:,,,/"
-                                   + Assembly.GetExecutingAssembly().GetName().Name
-                                   + ";component/"
-                                   + "Resources/Exit.png";
-                var settingBitmapImage = new BitmapImage(new Uri(settingImageUri, UriKind.Absolute));
-                var exitBitmapImage = new BitmapImage(new Uri(exitImageUri, UriKind.Absolute));
-
-                _settingBitmap = ImageToBitmap(settingBitmapImage);
-                _exitBitmap = ImageToBitmap(exitBitmapImage);
-                _notifyIcon = new NotifyIcon
-                {
-                    ContextMenuStrip = new ContextMenuStrip()
-                    {
-                        Renderer =  new MenuRenderer()
-                    }
-                };
-                _notifyIcon.ContextMenuStrip.Items.Add(new ToolStripMenuItem(TranslateHelper.Translate("Setting"),
-                    _settingBitmap, (s, e) => ShowSettingWindow()));
-                _notifyIcon.ContextMenuStrip.Items.Add(new ToolStripMenuItem(TranslateHelper.Translate("Exit"),
-                    _exitBitmap, (s, e) => Close()));
-                _notifyIcon.DoubleClick += OnNotifyIconDoubleClick;
-            }
-
-            _notifyIcon.Visible = SettingManager.TrayIconId > 0;
-            if (_notifyIcon.Visible && _currentTrayIconId != SettingManager.TrayIconId)
-            {
-                _currentTrayIconId = SettingManager.TrayIconId;
-                if (_notifyIcon.Icon != null)
-                {
-                    _notifyIcon.Icon.Dispose();
-                    _notifyIcon.Icon = null;
-                }
                 var icon = System.Drawing.Icon.ExtractAssociatedIcon(_currentExeFilePath);
                 var iconUri = @"pack://application:,,,/"
                               + Assembly.GetExecutingAssembly().GetName().Name
@@ -145,8 +108,8 @@ namespace X330Backlight
                 try
                 {
                     var iconImageUri = new Uri(iconUri, UriKind.Absolute);
-                    var imageSource = new BitmapImage(iconImageUri);
-                    var iconBitmap = ImageToBitmap(imageSource);
+                    var image = new BitmapImage(iconImageUri);
+                    var iconBitmap = ImageToBitmap(image);
                     icon = System.Drawing.Icon.FromHandle(iconBitmap.GetHicon());
                     iconBitmap.Dispose();
                 }
@@ -154,8 +117,18 @@ namespace X330Backlight
                 {
                     Logger.Write($"GetIcon from {iconUri} failed, error:{ex}");
                 }
-                _notifyIcon.Icon = icon;
 
+                var settingCommand = new TaskbarIconMenuCommand(ShowSettingWindow);
+                var exitCommand = new TaskbarIconMenuCommand(Close);
+                var taskbarIconViewModel = new TaskbarIconViewModel(settingCommand,exitCommand);
+                _taskbarIcon = new TaskbarIcon
+                {
+                    DataContext = taskbarIconViewModel,
+                    ContextMenu = Application.Current.TryFindResource("SysTrayMenu") as ContextMenu,
+                    TrayToolTip = Application.Current.TryFindResource("SysTrayToolTip") as Border,
+                    Icon = icon
+                };
+                _taskbarIcon.TrayMouseDoubleClick += OnTrayIconDoubleClick;
                 var backlightService = ServiceManager.GetService<IBacklightService>();
                 backlightService.BrightnessChanged += OnBrightnessChanged;
                 OnBrightnessChanged(backlightService, EventArgs.Empty);
@@ -182,7 +155,7 @@ namespace X330Backlight
         /// <summary>
         /// Handle double click trayicon event.
         /// </summary>
-        private void OnNotifyIconDoubleClick(object sender, EventArgs e)
+        private void OnTrayIconDoubleClick(object sender, RoutedEventArgs e)
         {
             ShowSettingWindow();
         }
@@ -205,10 +178,13 @@ namespace X330Backlight
         public void StopAllFunctions()
         {
             Logger.Write("Stopping functions...");
-            if (_notifyIcon != null && _notifyIcon.Visible)
+            if (_taskbarIcon != null)
             {
+                _taskbarIcon.TrayMouseDoubleClick -= OnTrayIconDoubleClick;
                 var backlightService = ServiceManager.GetService<IBacklightService>();
                 backlightService.BrightnessChanged -= OnBrightnessChanged;
+                _taskbarIcon.Dispose();
+                _taskbarIcon = null;
             }
             if (_osdWindow != null)
             {
@@ -242,14 +218,17 @@ namespace X330Backlight
 
         private void OnBrightnessChanged(object sender, EventArgs e)
         {
-            if (_notifyIcon != null)
+            if (_taskbarIcon != null)
             {
                 var backlightService = ServiceManager.GetService<IBacklightService>();
                 var brightness = backlightService.Brightness;
                 var displayText = $"{TranslateHelper.Translate("CurrentBrightness")}: {brightness}";
                 Dispatcher.Invoke(() =>
                 {
-                    _notifyIcon.Text = displayText;
+                    if (((Border) _taskbarIcon.TrayToolTip)?.Child is TextBlock textBlock)
+                    {
+                        textBlock.Text = displayText;
+                    }
                 });
             }
         }
@@ -257,15 +236,6 @@ namespace X330Backlight
         protected override void OnClosed(EventArgs e)
         {
             _settingWindow?.Close();
-
-            _notifyIcon?.Dispose();
-            _notifyIcon = null;
-
-            _exitBitmap?.Dispose();
-            _exitBitmap = null;
-            _settingBitmap?.Dispose();
-            _settingBitmap = null;
-
             StopAllFunctions();
             base.OnClosed(e);
         }

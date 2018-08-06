@@ -13,6 +13,8 @@ namespace X330Backlight.Services
 
         private readonly object _brightnessLocker = new object();
 
+        private bool _forceLoadBrightness = false;
+
         private uint _deviceId;
         private int _brightness;
 
@@ -41,7 +43,7 @@ namespace X330Backlight.Services
             get => _brightness;
             set
             {
-                if (_brightness != value)
+                if (_brightness != value || _forceLoadBrightness)
                 {
                     if (value > 15) value = 15;
                     if (value < 0) value = 0;
@@ -251,8 +253,12 @@ namespace X330Backlight.Services
                     HID.SetTimeouts(_deviceId, 0, 1000);
                 }
             }
-            //Load saved brightness
-            Brightness = LoadBrightness();
+
+            using (new ForceLoadBrightnessTransaction(this))
+            {
+                //Force Load saved brightness
+                Brightness = LoadBrightness();
+            }
 
             _eventTerminate.Reset();
             _monitorThread = new Thread(StartMonitorBrightness);
@@ -317,6 +323,23 @@ namespace X330Backlight.Services
                 }
 
                 _deviceId = 0;
+            }
+        }
+
+
+        private class ForceLoadBrightnessTransaction : IDisposable
+        {
+            private readonly BacklightService _backlightService;
+
+            public ForceLoadBrightnessTransaction(BacklightService backlightService)
+            {
+                _backlightService = backlightService;
+                _backlightService._forceLoadBrightness = true;
+            }
+
+            public void Dispose()
+            {
+                _backlightService._forceLoadBrightness = false;
             }
         }
     }
