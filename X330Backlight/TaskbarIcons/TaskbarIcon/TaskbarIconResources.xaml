@@ -1,8 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:utils="clr-namespace:X330Backlight.Utils">
-    <Border x:Shared="False"  x:Key="SysTrayToolTip" CornerRadius="2" Background="Black" BorderBrush="#D4D4D4" BorderThickness="0.5" MinHeight="48" MinWidth="180">
-        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="20" Margin="8,0,8,0"/>
+    <Border x:Shared="False"  x:Key="SysTrayToolTip" CornerRadius="2" Background="Black" BorderBrush="#D4D4D4" BorderThickness="0.8" MinHeight="32" MinWidth="120">
+        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16" Margin="8,0,8,0"/>
     </Border>
     <ContextMenu x:Shared="False" x:Key="SysTrayMenu">
         <ContextMenu.Resources>

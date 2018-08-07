@@ -44,7 +44,7 @@ namespace X330Backlight
         {
             var appName = TranslateHelper.Translate("AppName");
             var auto = SettingManager.AutoStart ? 1 : 0;
-            var helper = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AutoStartHelper.exe");
+            var helper = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AutoStart.exe");
             if (File.Exists(helper))
             {
                 var process = Process.Start(new ProcessStartInfo(helper)

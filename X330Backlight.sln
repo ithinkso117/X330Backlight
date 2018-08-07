@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "X330Backlight", "X330Backlight\X330Backlight.csproj", "{698C87EF-B6EE-4BB3-B65D-49256329A447}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoStartHelper", "AutoStartHelper\AutoStartHelper.csproj", "{4AC53552-84DA-4A9C-9152-F4F3B1F9331E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoStart", "Tools\AutoStart\AutoStart.csproj", "{4AC53552-84DA-4A9C-9152-F4F3B1F9331E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

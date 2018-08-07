@@ -200,5 +200,8 @@
     <Resource Include="Resources\Exit.png" />
     <Resource Include="Resources\Setting.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Shield.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
