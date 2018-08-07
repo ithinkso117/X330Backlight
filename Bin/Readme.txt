@@ -2,6 +2,9 @@ Windows10下直接解压到任意目录运行X330Backlight.exe，第一次运行会显示设置程序，按
 Windows7下请先安装.NET Framework 4.6.1, 下载地址：https://www.microsoft.com/zh-CN/download/details.aspx?id=49982
 
 更新历史
+2018-08-07 V1.0.0.5
+1. 使用外部工具设置注册表，本地调光程序不再需要管理员权限。
+
 2018-08-07 V1.0.0.4
 1. 修复电源键调背光无法保存背光值的问题。
 2. 修复托盘图标透明背景丢失的问题。
