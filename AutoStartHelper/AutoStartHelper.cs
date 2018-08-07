@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32;
 
-namespace X330Backlight.Utils
+namespace AutoStartHelper
 {
     public class AutoStartHelper
     {

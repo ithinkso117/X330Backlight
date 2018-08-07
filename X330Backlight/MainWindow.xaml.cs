@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
@@ -34,7 +35,6 @@ namespace X330Backlight
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             SettingManager.SettingsChanged += OnSettingsChanged;
-            HandleAutoStart();
         }
 
 
@@ -43,7 +43,19 @@ namespace X330Backlight
         private void HandleAutoStart()
         {
             var appName = TranslateHelper.Translate("AppName");
-            AutoStartHelper.AutoStart(appName, _currentExeFilePath, SettingManager.AutoStart);
+            var auto = SettingManager.AutoStart ? 1 : 0;
+            var helper = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AutoStartHelper.exe");
+            if (File.Exists(helper))
+            {
+                var process = Process.Start(new ProcessStartInfo(helper)
+                {
+                    Arguments = $"/name=\"{appName}\" /file=\"{_currentExeFilePath}\" /auto=\"{auto}\"",
+                    CreateNoWindow = false,
+                    UseShellExecute = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                });
+                process?.WaitForExit();
+            }
         }
 
 
