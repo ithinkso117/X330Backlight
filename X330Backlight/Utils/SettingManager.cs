@@ -24,7 +24,7 @@ namespace X330Backlight.Utils
         private static readonly string SettingFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "X330Backlight.ini");
 
 
-        public const int DefaultBrightness = 13;
+        public const int DefaultBrightness = 7;
         public const bool DefaultAutoStart = false;
         public const int DefaultOsdStyle = 1;
         public const int DefaultOsdTimeout = 3;
