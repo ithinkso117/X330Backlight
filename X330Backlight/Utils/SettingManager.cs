@@ -5,7 +5,20 @@ using X330Backlight.Utils.Configuration;
 
 namespace X330Backlight.Utils
 {
-    public class SettingManager
+    internal class SettingsChangedEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Gets if needs admin rights.
+        /// </summary>
+        public bool RequireAdmin { get; }
+
+        public SettingsChangedEventArgs(bool requireAdmin)
+        {
+            RequireAdmin = requireAdmin;
+        }
+    }
+
+    internal class SettingManager
     {
 
         private static readonly string SettingFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "X330Backlight.ini");
@@ -30,7 +43,7 @@ namespace X330Backlight.Utils
         /// <summary>
         /// Raised when the settings are updated, bool is need administrator rights.
         /// </summary>
-        public static event EventHandler<bool> SettingsChanged;
+        public static event EventHandler<SettingsChangedEventArgs> SettingsChanged;
 
         /// <summary>
         /// Gets if this time is first run.
@@ -225,7 +238,7 @@ namespace X330Backlight.Utils
         /// </summary>
         public static void NotifySettingsChanged(bool requiredAdmin)
         {
-            SettingsChanged?.Invoke(null, requiredAdmin);
+            SettingsChanged?.Invoke(null, new SettingsChangedEventArgs(requiredAdmin));
         }
     }
 }

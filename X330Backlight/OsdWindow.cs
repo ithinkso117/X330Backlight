@@ -33,16 +33,16 @@ namespace X330Backlight
         private void OnBrightnessChanged(object sender, EventArgs e)
         {
             var backlightService = (BacklightService) sender;
-            Dispatcher.Invoke(() =>
+            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
             {
                 UpdateOsd(backlightService.Brightness);
-                Dispatcher.Invoke(ShowOsd);
-            });
+                Dispatcher.Invoke(DispatcherPriority.Normal,new Action(ShowOsd));
+            }));
         }
 
         private void UpdateOsd(int brightness)
         {
-            Dispatcher.Invoke(() =>
+            Dispatcher.Invoke(DispatcherPriority.Normal,new Action(() =>
             {
                 if (_brightnessLevel == null)
                 {
@@ -72,7 +72,7 @@ namespace X330Backlight
                     
                     
                 }
-            });
+            }));
         }
 
 

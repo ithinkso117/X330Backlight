@@ -25,7 +25,7 @@ namespace X330Backlight.Services
         /// <summary>
         /// Raised when the HotKey(Fn+F8,F9) is pressed.
         /// </summary>
-        public event EventHandler<TpHotKey> HotKeyTriggered;
+        public event EventHandler<HotkeyEventArgs> HotKeyTriggered;
 
 
         /// <summary>
@@ -74,15 +74,15 @@ namespace X330Backlight.Services
                                     _lastNotificationValue = currentNotificationValue;
                                     if (num == 32768)
                                     {
-                                        HotKeyTriggered?.Invoke(this, TpHotKey.BrightnessIncrease);
+                                        HotKeyTriggered?.Invoke(this, new HotkeyEventArgs(TpHotkey.BrightnessIncrease));
                                     }
                                     else if (num == 65536)
                                     {
-                                        HotKeyTriggered?.Invoke(this, TpHotKey.BrightnessDecrease);
+                                        HotKeyTriggered?.Invoke(this, new HotkeyEventArgs(TpHotkey.BrightnessDecrease));
                                     }
                                     else if (num == 8388608)
                                     {
-                                        HotKeyTriggered?.Invoke(this, TpHotKey.ThinkVantage);
+                                        HotKeyTriggered?.Invoke(this, new HotkeyEventArgs(TpHotkey.ThinkVantage));
                                     }
                                 }
                             }

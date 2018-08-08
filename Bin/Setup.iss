@@ -12,6 +12,7 @@ AppId={{34F9CD09-11EF-4911-99CF-5B88F7B479EE}
 AppName={cm:MyAppName}
 AppVersion={#SetupAppVersion}
 DefaultDirName={userappdata}\{cm:MyAppName}
+DefaultGroupName={cm:MyAppName}
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=admin
@@ -21,9 +22,12 @@ VersionInfoVersion={#SetupAppVersion}
 VersionInfoCompany={#SetupAppPublisher}
 VersionInfoCopyright={#CopyRight}
 SetupIconFile=AppIcon.ico
+WizardSmallImageFile=SetupSmall.bmp
+WizardImageFile=SetupWizard.bmp
 OutputDir=".\"
 OutputBaseFilename={#SetupAppName}_{#SetupAppVersion}
 UninstallDisplayName={cm:MyAppName}
+DisableWelcomePage=no
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"

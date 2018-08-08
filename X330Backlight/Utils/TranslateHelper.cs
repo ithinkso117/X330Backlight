@@ -16,10 +16,11 @@ namespace X330Backlight.Utils
         static TranslateHelper()
         {
             var currentLanguage = CultureInfo.CurrentCulture.Name.ToLower();
-            var languageFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Languages", currentLanguage + ".ini");
+            var languageDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Languages");
+            var languageFile = Path.Combine(languageDir , currentLanguage + ".ini");
             if (!File.Exists(languageFile))
             {
-                languageFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Languages", DefaultLanguage + ".ini");
+                languageFile = Path.Combine(languageDir, DefaultLanguage + ".ini");
             }
             LanguageManager = new ConfigManager(File.ReadAllText(languageFile));
         }

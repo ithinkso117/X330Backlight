@@ -47,18 +47,47 @@ namespace X330Backlight.Services.Interfaces
     }
 
 
+    internal class LidSwitchStatusChangedEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Gets the LidSwitch status.
+        /// </summary>
+        public LidSwitchStatus Status { get; }
+
+        public LidSwitchStatusChangedEventArgs(LidSwitchStatus status)
+        {
+            Status = status;
+        }
+    }
+
+
+    internal class PowerChangeStatusEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Gets the PowerChange status.
+        /// </summary>
+       public PowerChangeStatus Status { get; }
+
+        public PowerChangeStatusEventArgs(PowerChangeStatus status)
+        {
+            Status = status;
+        }
+
+    }
+
+
     internal interface IPowerService : IService
     {
         /// <summary>
         /// Raised when the lid switch status changed.
         /// </summary>
-        event EventHandler<LidSwitchStatus> LidSwitchStatusChanged;
+        event EventHandler<LidSwitchStatusChangedEventArgs> LidSwitchStatusChanged;
 
 
         /// <summary>
         /// Raised when system is about to resume or suspend.
         /// </summary>
-        event EventHandler<PowerChangeStatus> PowerStatusChanged;
+        event EventHandler<PowerChangeStatusEventArgs> PowerStatusChanged;
 
 
         /// <summary>

@@ -1,0 +1,203 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{698C87EF-B6EE-4BB3-B65D-49256329A447}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>X330Backlight</RootNamespace>
+    <AssemblyName>X330Backlight</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>AppIcon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\Bin\NFX350\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>..\Bin\NFX350\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>none</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="BaseWindow.cs" />
+    <Compile Include="CirculaOsdWindow.xaml.cs">
+      <DependentUpon>CirculaOsdWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IServiceOwner.cs" />
+    <Compile Include="MainService.cs" />
+    <Compile Include="DefaultOsdWindow.xaml.cs">
+      <DependentUpon>DefaultOsdWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="OsdWindow.cs" />
+    <Compile Include="Services\BacklightService.cs" />
+    <Compile Include="Services\HotkeyService.cs" />
+    <Compile Include="Services\IdleService.cs" />
+    <Compile Include="Services\Interfaces\IBacklightService.cs" />
+    <Compile Include="Services\Interfaces\IHotkeyService.cs" />
+    <Compile Include="Services\Interfaces\IIdleService.cs" />
+    <Compile Include="Services\Interfaces\IPowerService.cs" />
+    <Compile Include="Services\PowerService.cs" />
+    <Compile Include="Services\Interfaces\IService.cs" />
+    <Compile Include="Services\ServiceBase.cs" />
+    <Compile Include="Services\ServiceManager.cs" />
+    <Compile Include="Settings\OsdTimeoutViewModel.cs" />
+    <Compile Include="Settings\TrayIconViewModel.cs" />
+    <Compile Include="Settings\TurnOffMonitorWayViewModel.cs" />
+    <Compile Include="Settings\OsdStyleViewModel.cs" />
+    <Compile Include="Settings\SettingViewModel.cs" />
+    <Compile Include="Settings\SettingWindow.xaml.cs">
+      <DependentUpon>SettingWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\SavingModeTimeViewModel.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIconViewModel.cs" />
+    <Compile Include="Utils\Configuration\ConfigLoader.cs" />
+    <Compile Include="Utils\Configuration\ConfigManager.cs" />
+    <Compile Include="Utils\Configuration\ConfigSection.cs" />
+    <Compile Include="Utils\Configuration\IConfigUpdater.cs" />
+    <Compile Include="Utils\Configuration\TokenHelper.cs" />
+    <Compile Include="Utils\HID.cs" />
+    <Compile Include="Utils\Logger.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIconMenuCommand.cs" />
+    <Compile Include="Utils\SettingManager.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIcon\BalloonIcon.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIcon\Interop\BalloonFlags.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIcon\Interop\IconDataMembers.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIcon\Interop\IconState.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIcon\Interop\MouseEvent.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIcon\Interop\NotifyCommand.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIcon\Interop\NotifyIconData.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIcon\Interop\NotifyIconVersion.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIcon\Interop\Point.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIcon\Interop\SystemInfo.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIcon\Interop\TrayInfo.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIcon\Interop\WinApi.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIcon\Interop\WindowClass.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIcon\Interop\WindowMessageSink.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIcon\PopupActivationMode.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIcon\RoutedEventHelper.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIcon\TaskbarIcon.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIcon\TaskbarIcon.Declarations.cs" />
+    <Compile Include="TaskbarIcons\TaskbarIcon\Util.cs" />
+    <Compile Include="Utils\TranslateHelper.cs" />
+    <Compile Include="Utils\TranslaterExtension.cs" />
+    <Compile Include="Utils\TurnOffMonitorWay.cs" />
+    <Compile Include="Utils\Native.cs" />
+    <Page Include="CirculaOsdWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="DefaultOsdWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\SettingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TaskbarIcons\TaskbarIcon\TaskbarIconResources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\BackLight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="AppIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIcon1.png" />
+    <Resource Include="Resources\TrayIcon2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIcon3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIcon4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Close.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\OSD1.png" />
+    <Resource Include="Resources\OSD2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Arrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Exit.png" />
+    <Resource Include="Resources\Setting.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Shield.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

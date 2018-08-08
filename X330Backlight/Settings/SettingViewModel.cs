@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using X330Backlight.Annotations;
 using X330Backlight.Utils;
 
 namespace X330Backlight.Settings
 {
     internal class SettingViewModel:INotifyPropertyChanged
     {
-        private OsdStyleViewModel _selectedOsdStyles;
+        private OsdStyleViewModel _selectedOsdStyle;
         private TrayIconViewModel _selectedTrayIcon;
         private bool _autoStart;
         private OsdTimeoutViewModel _selectedOsdTimeout;
@@ -31,7 +29,7 @@ namespace X330Backlight.Settings
                 if (_autoStart != value)
                 {
                     _autoStart = value;
-                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(AutoStart));
                 }
             }
         }
@@ -39,20 +37,20 @@ namespace X330Backlight.Settings
         /// <summary>
         /// Gets all available OsdStyles.
         /// </summary>
-        public IReadOnlyList<OsdStyleViewModel> OsdStyles { get; }
+        public IList<OsdStyleViewModel> OsdStyles { get; }
 
         /// <summary>
         /// Gets or sets the selected OsdStyle.
         /// </summary>
-        public OsdStyleViewModel SelectedOsdStyles
+        public OsdStyleViewModel SelectedOsdStyle
         {
-            get => _selectedOsdStyles;
+            get => _selectedOsdStyle;
             set
             {
-                if (_selectedOsdStyles != value)
+                if (_selectedOsdStyle != value)
                 {
-                    _selectedOsdStyles = value;
-                    OnPropertyChanged();
+                    _selectedOsdStyle = value;
+                    OnPropertyChanged(nameof(SelectedOsdStyle));
                 }
             }
         }
@@ -60,7 +58,7 @@ namespace X330Backlight.Settings
         /// <summary>
         /// Gets all Osd timeout values.
         /// </summary>
-        public IReadOnlyList<OsdTimeoutViewModel> OsdTimeouts { get; }
+        public IList<OsdTimeoutViewModel> OsdTimeouts { get; }
 
 
         /// <summary>
@@ -74,7 +72,7 @@ namespace X330Backlight.Settings
                 if (_selectedOsdTimeout != value)
                 {
                     _selectedOsdTimeout = value;
-                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(SelectedOsdTimeout));
                 }
             }
         }
@@ -82,7 +80,7 @@ namespace X330Backlight.Settings
         /// <summary>
         /// Gets all available saving mode times.
         /// </summary>
-        public IReadOnlyList<SavingModeTimeViewModel> SavingModeTimes { get; }
+        public IList<SavingModeTimeViewModel> SavingModeTimes { get; }
 
         /// <summary>
         /// Gets or sets the selected AC saving mode time.
@@ -95,7 +93,7 @@ namespace X330Backlight.Settings
                 if (_selectedAcSavingModeTime != value)
                 {
                     _selectedAcSavingModeTime = value;
-                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(SelectedAcSavingModeTime));
                 }
             }
         }
@@ -111,7 +109,7 @@ namespace X330Backlight.Settings
                 if (_selectedBatterySavingModeTime != value)
                 {
                     _selectedBatterySavingModeTime = value;
-                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(SelectedBatterySavingModeTime));
                 }
             }
         }
@@ -119,7 +117,7 @@ namespace X330Backlight.Settings
         /// <summary>
         /// Gets all available TurnOffMonitorWays;
         /// </summary>
-        public IReadOnlyList<TurnOffMonitorWayViewModel> TurnOffMonitorWays { get; }
+        public IList<TurnOffMonitorWayViewModel> TurnOffMonitorWays { get; }
 
 
         /// <summary>
@@ -133,7 +131,7 @@ namespace X330Backlight.Settings
                 if (_selectedTurnOffMonitorWay != value)
                 {
                     _selectedTurnOffMonitorWay = value;
-                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(SelectedTurnOffMonitorWay));
                 }
             }
         }
@@ -142,7 +140,7 @@ namespace X330Backlight.Settings
         /// <summary>
         /// Gets all available trayicons.
         /// </summary>
-        public IReadOnlyList<TrayIconViewModel> TrayIcons { get; }
+        public IList<TrayIconViewModel> TrayIcons { get; }
 
         /// <summary>
         /// Gets or sets the selected tray icon.
@@ -155,7 +153,7 @@ namespace X330Backlight.Settings
                 if (_selectedTrayIcon != value)
                 {
                     _selectedTrayIcon = value;
-                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(SelectedTrayIcon));
                 }
             }
         }
@@ -172,7 +170,7 @@ namespace X330Backlight.Settings
                 if (_enableThinkVantage != value)
                 {
                     _enableThinkVantage = value;
-                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(EnableThinkVantage));
                 }
             }
         }
@@ -238,7 +236,7 @@ namespace X330Backlight.Settings
         private void LoadSettings()
         {
             AutoStart = SettingManager.AutoStart;
-            SelectedOsdStyles = OsdStyles.First(x => x.StyleId == SettingManager.OsdStyle);
+            SelectedOsdStyle = OsdStyles.First(x => x.StyleId == SettingManager.OsdStyle);
             SelectedOsdTimeout = OsdTimeouts.FirstOrDefault(x => x.Time == SettingManager.OsdTimeout);
             SelectedAcSavingModeTime = SavingModeTimes.First(x => x.Time == SettingManager.AcSavingModeTime);
             SelectedBatterySavingModeTime = SavingModeTimes.First(x => x.Time == SettingManager.BatterySavingModeTime);
@@ -255,7 +253,7 @@ namespace X330Backlight.Settings
             bool autoStartChanged = AutoStart != SettingManager.AutoStart;
             SettingManager.UpdateSettings(
                 AutoStart, 
-                SelectedOsdStyles.StyleId, 
+                SelectedOsdStyle.StyleId, 
                 SelectedOsdTimeout.Time, 
                 SelectedAcSavingModeTime.Time,
                 batterySavingModeTime:SelectedBatterySavingModeTime.Time,
@@ -268,8 +266,7 @@ namespace X330Backlight.Settings
         }
 
 
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

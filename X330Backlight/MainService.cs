@@ -25,7 +25,7 @@ namespace X330Backlight
             powerService.PowerStatusChanged += OnPowerChangeStatusChanged;
 
             var hotkeyservice = new HotkeyService();
-            hotkeyservice.HotKeyTriggered += OnHotKeyTriggered;
+            hotkeyservice.HotKeyTriggered += OnHotkeyTriggered;
 
             var idleService = new IdleService();
             idleService.IdleStateChanged += OnIdleStateChanged;
@@ -65,10 +65,10 @@ namespace X330Backlight
         /// </summary>
         /// <param name="sender">Shoud be the IBacklightService</param>
         /// <param name="e">The lid switch's status</param>
-        private void OnLidSwitchStatusChanged(object sender, LidSwitchStatus e)
+        private void OnLidSwitchStatusChanged(object sender, LidSwitchStatusChangedEventArgs e)
         {
             var backlightService = ServiceManager.GetService<IBacklightService>();
-            switch (e)
+            switch (e.Status)
             {
                 case LidSwitchStatus.Opened:
                     backlightService.TurnOnBacklight();
@@ -84,9 +84,9 @@ namespace X330Backlight
         /// </summary>
         /// <param name="sender">Should be the power service.</param>
         /// <param name="e">The power status.</param>
-        private void OnPowerChangeStatusChanged(object sender, PowerChangeStatus e)
+        private void OnPowerChangeStatusChanged(object sender, PowerChangeStatusEventArgs e)
         {
-            switch (e)
+            switch (e.Status)
             {
                 case PowerChangeStatus.Resuming:
                     Logger.Write("Resuming...");
@@ -114,22 +114,22 @@ namespace X330Backlight
         /// </summary>
         /// <param name="sender">Should be the HotkeyService.</param>
         /// <param name="e">The hotkey pressed.</param>
-        private void OnHotKeyTriggered(object sender, TpHotKey e)
+        private void OnHotkeyTriggered(object sender, HotkeyEventArgs e)
         {
             var backlightService = ServiceManager.GetService<IBacklightService>();
-            switch (e)
+            switch (e.Key)
             {
-                case TpHotKey.BrightnessIncrease:
+                case TpHotkey.BrightnessIncrease:
                     backlightService.Brightness++;
                     //We should save the brightness here, when user adjust the brightness.
                     backlightService.SaveBrightness();
                     break;
-                case TpHotKey.BrightnessDecrease:
+                case TpHotkey.BrightnessDecrease:
                     backlightService.Brightness--;
                     //We should save the brightness here, when user adjust the brightness.
                     backlightService.SaveBrightness();
                     break;
-                case TpHotKey.ThinkVantage:
+                case TpHotkey.ThinkVantage:
                     if (SettingManager.TurnOffMonitorByThinkVantage)
                     {
                         if (backlightService.BacklightClosed)
@@ -161,7 +161,7 @@ namespace X330Backlight
             idleService.IdleStateChanged -= OnIdleStateChanged;
 
             var hotkeyservice = ServiceManager.GetService<IHotkeyService>();
-            hotkeyservice.HotKeyTriggered -= OnHotKeyTriggered;
+            hotkeyservice.HotKeyTriggered -= OnHotkeyTriggered;
 
             var powerService = ServiceManager.GetService<IPowerService>();
             powerService.LidSwitchStatusChanged -= OnLidSwitchStatusChanged;

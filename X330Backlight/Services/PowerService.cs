@@ -16,13 +16,13 @@ namespace X330Backlight.Services
         /// <summary>
         /// Raised when the lid switch status changed.
         /// </summary>
-        public event EventHandler<LidSwitchStatus> LidSwitchStatusChanged;
+        public event EventHandler<LidSwitchStatusChangedEventArgs> LidSwitchStatusChanged;
 
 
         /// <summary>
         /// Raised when system is about to resume.
         /// </summary>
-        public event EventHandler<PowerChangeStatus> PowerStatusChanged;
+        public event EventHandler<PowerChangeStatusEventArgs> PowerStatusChanged;
 
 
 
@@ -79,7 +79,7 @@ namespace X330Backlight.Services
                     Native.PowerbroadcastSetting setting = (Native.PowerbroadcastSetting)Marshal.PtrToStructure(lparam, typeof(Native.PowerbroadcastSetting));
                     if (setting.PowerSetting == _guidLidswitchStateChange)
                     {
-                        LidSwitchStatusChanged?.Invoke(this, setting.Data == 1? LidSwitchStatus.Opened: LidSwitchStatus.Closed);
+                        LidSwitchStatusChanged?.Invoke(this, new LidSwitchStatusChangedEventArgs(setting.Data == 1? LidSwitchStatus.Opened: LidSwitchStatus.Closed));
                     }
                 }
 
@@ -95,11 +95,11 @@ namespace X330Backlight.Services
         {
             if (e.Mode == PowerModes.Resume)
             {
-                PowerStatusChanged?.Invoke(this, PowerChangeStatus.Resuming);
+                PowerStatusChanged?.Invoke(this, new PowerChangeStatusEventArgs(PowerChangeStatus.Resuming));
             }
             else if (e.Mode == PowerModes.Suspend)
             {
-                PowerStatusChanged?.Invoke(this, PowerChangeStatus.Suspending);
+                PowerStatusChanged?.Invoke(this, new PowerChangeStatusEventArgs(PowerChangeStatus.Suspending));
             }
         }
 

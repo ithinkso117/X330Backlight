@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "X330Backlight", "X330Backlight\X330Backlight.csproj", "{698C87EF-B6EE-4BB3-B65D-49256329A447}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "X330Backlight_NFX350", "X330Backlight\X330Backlight_NFX350.csproj", "{698C87EF-B6EE-4BB3-B65D-49256329A447}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoStart", "Tools\AutoStart\AutoStart.csproj", "{4AC53552-84DA-4A9C-9152-F4F3B1F9331E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "X330Backlight_NFX461", "X330Backlight\X330Backlight_NFX461.csproj", "{8D75453A-C01B-4458-B36C-15E75F883207}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoStart_NFX350", "Tools\AutoStart\AutoStart_NFX350.csproj", "{4AC53552-84DA-4A9C-9152-F4F3B1F9331E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoStart_NFX461", "Tools\AutoStart\AutoStart_NFX461.csproj", "{D2664035-6BEF-4E28-A504-07D0F3935B55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +21,18 @@ Global
 		{698C87EF-B6EE-4BB3-B65D-49256329A447}.Debug|x86.Build.0 = Debug|x86
 		{698C87EF-B6EE-4BB3-B65D-49256329A447}.Release|x86.ActiveCfg = Release|x86
 		{698C87EF-B6EE-4BB3-B65D-49256329A447}.Release|x86.Build.0 = Release|x86
+		{8D75453A-C01B-4458-B36C-15E75F883207}.Debug|x86.ActiveCfg = Debug|x86
+		{8D75453A-C01B-4458-B36C-15E75F883207}.Debug|x86.Build.0 = Debug|x86
+		{8D75453A-C01B-4458-B36C-15E75F883207}.Release|x86.ActiveCfg = Release|x86
+		{8D75453A-C01B-4458-B36C-15E75F883207}.Release|x86.Build.0 = Release|x86
 		{4AC53552-84DA-4A9C-9152-F4F3B1F9331E}.Debug|x86.ActiveCfg = Debug|x86
 		{4AC53552-84DA-4A9C-9152-F4F3B1F9331E}.Debug|x86.Build.0 = Debug|x86
 		{4AC53552-84DA-4A9C-9152-F4F3B1F9331E}.Release|x86.ActiveCfg = Release|x86
 		{4AC53552-84DA-4A9C-9152-F4F3B1F9331E}.Release|x86.Build.0 = Release|x86
+		{D2664035-6BEF-4E28-A504-07D0F3935B55}.Debug|x86.ActiveCfg = Debug|x86
+		{D2664035-6BEF-4E28-A504-07D0F3935B55}.Debug|x86.Build.0 = Debug|x86
+		{D2664035-6BEF-4E28-A504-07D0F3935B55}.Release|x86.ActiveCfg = Release|x86
+		{D2664035-6BEF-4E28-A504-07D0F3935B55}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

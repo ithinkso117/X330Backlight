@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{698C87EF-B6EE-4BB3-B65D-49256329A447}</ProjectGuid>
+    <ProjectGuid>{8D75453A-C01B-4458-B36C-15E75F883207}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>X330Backlight</RootNamespace>
     <AssemblyName>X330Backlight</AssemblyName>
@@ -21,7 +21,7 @@
   <PropertyGroup />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\Bin\</OutputPath>
+    <OutputPath>..\Bin\NFX461\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -30,7 +30,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>..\Bin\</OutputPath>
+    <OutputPath>..\Bin\NFX461\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
@@ -64,7 +64,6 @@
       <DependentUpon>DefaultOsdWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="OsdWindow.cs" />
-    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Services\BacklightService.cs" />
     <Compile Include="Services\HotkeyService.cs" />
     <Compile Include="Services\IdleService.cs" />

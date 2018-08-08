@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using X330Backlight.Services;
 using X330Backlight.Services.Interfaces;
 using X330Backlight.Settings;
@@ -24,7 +25,7 @@ namespace X330Backlight
         private HwndSource _hwndSource;
         private MainService _mainService;
 
-        private readonly string _currentExeFilePath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+        private readonly string _currentExeFilePath = Process.GetCurrentProcess().MainModule.FileName;
 
         private TaskbarIcon _taskbarIcon;
         private SettingWindow _settingWindow;
@@ -65,9 +66,9 @@ namespace X330Backlight
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnSettingsChanged(object sender, bool e)
+        private void OnSettingsChanged(object sender, SettingsChangedEventArgs e)
         {
-            if (e)
+            if (e.RequireAdmin)
             {
                 HandleAutoStart();
             }
@@ -238,13 +239,13 @@ namespace X330Backlight
                 var backlightService = ServiceManager.GetService<IBacklightService>();
                 var brightness = backlightService.Brightness;
                 var displayText = $"{TranslateHelper.Translate("CurrentBrightness")}: {brightness}";
-                Dispatcher.Invoke(() =>
+                Dispatcher.Invoke(DispatcherPriority.Normal,new Action(() =>
                 {
                     if (((Border) _taskbarIcon.TrayToolTip)?.Child is TextBlock textBlock)
                     {
                         textBlock.Text = displayText;
                     }
-                });
+                }));
             }
         }
 
