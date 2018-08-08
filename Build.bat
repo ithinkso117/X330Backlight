@@ -11,4 +11,4 @@ Bin\signtool.exe sign /f "Bin\X330Backlight.pfx" /t http://timestamp.verisign.co
 
 "C:\Program Files (x86)\Inno Setup 5\ISCC.exe" "Bin\Setup.iss"
 
-Bin\signtool.exe sign /f "Bin\X330Backlight.pfx" /t http://timestamp.verisign.com/scripts/timstamp.dll "Bin\X330Backlight_1.0.0.6.exe"
+Bin\signtool.exe sign /f "Bin\X330Backlight.pfx" /t http://timestamp.verisign.com/scripts/timstamp.dll "Bin\X330Backlight_1.0.0.7.exe"
