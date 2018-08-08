@@ -2,7 +2,7 @@ Windows10下直接解压到任意目录运行X330Backlight.exe，第一次运行会显示设置程序，按
 Windows7下请先安装.NET Framework 4.6.1, 下载地址：https://www.microsoft.com/zh-CN/download/details.aspx?id=49982
 
 更新历史
-2018-08-07 V1.0.0.6
+2018-08-08 V1.0.0.6
 1. 设置界面添加UAC指示，只有涉及到需要管理员权限的时候才会调用外部工具申请管理员权限。
 2. 分为.NET3.5 和NET4.6.1两个版本，Win7下执行.NET3.5， Win10下执行.NET4.6.1.
 3. 制作安装包，Win7自动安装.NET3.5的版本，无需再安装.NET4.6.1。
