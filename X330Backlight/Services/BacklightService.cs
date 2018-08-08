@@ -91,7 +91,7 @@ namespace X330Backlight.Services
                 if (Owner != null)
                 {
                     var handle = Owner.Source.Handle;
-                    WinApi.SendMessage(handle, WinApi.WmSyscommand, WinApi.ScMonitorpower, -1);
+                    Native.SendMessage(handle, Native.WmSyscommand, Native.ScMonitorpower, -1);
                     BacklightClosed = false;
                 }
             }
@@ -115,7 +115,7 @@ namespace X330Backlight.Services
                 if (Owner != null)
                 {
                     var handle = Owner.Source.Handle;
-                    WinApi.SendMessage(handle, WinApi.WmSyscommand, WinApi.ScMonitorpower, 2);
+                    Native.SendMessage(handle, Native.WmSyscommand, Native.ScMonitorpower, 2);
                     BacklightClosed = true;
                 }
             }

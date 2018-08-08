@@ -28,9 +28,9 @@ namespace X330Backlight.Utils
         private static readonly ConfigManager ConfigManager;
 
         /// <summary>
-        /// Raised when the settings are updated.
+        /// Raised when the settings are updated, bool is need administrator rights.
         /// </summary>
-        public static event EventHandler SettingsChanged;
+        public static event EventHandler<bool> SettingsChanged;
 
         /// <summary>
         /// Gets if this time is first run.
@@ -223,9 +223,9 @@ namespace X330Backlight.Utils
         /// <summary>
         /// Raiese a notification to notify everyone the settings are changed.
         /// </summary>
-        public static void NotifySettingsChanged()
+        public static void NotifySettingsChanged(bool requiredAdmin)
         {
-            SettingsChanged?.Invoke(null, EventArgs.Empty);
+            SettingsChanged?.Invoke(null, requiredAdmin);
         }
     }
 }

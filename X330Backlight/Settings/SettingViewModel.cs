@@ -252,6 +252,7 @@ namespace X330Backlight.Settings
         /// </summary>
         public void SaveSettings()
         {
+            bool autoStartChanged = AutoStart != SettingManager.AutoStart;
             SettingManager.UpdateSettings(
                 AutoStart, 
                 SelectedOsdStyles.StyleId, 
@@ -263,7 +264,7 @@ namespace X330Backlight.Settings
                 turnOffMonitorByThinkVantage:EnableThinkVantage
                 );
             //Notify the main app to reload the settings.
-            SettingManager.NotifySettingsChanged();
+            SettingManager.NotifySettingsChanged(autoStartChanged);
         }
 
 

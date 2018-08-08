@@ -51,6 +51,7 @@ namespace X330Backlight
                 {
                     Arguments = $"/name=\"{appName}\" /file=\"{_currentExeFilePath}\" /auto=\"{auto}\"",
                     CreateNoWindow = false,
+                    Verb = "runas",
                     UseShellExecute = true,
                     WindowStyle = ProcessWindowStyle.Hidden,
                 });
@@ -64,9 +65,13 @@ namespace X330Backlight
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnSettingsChanged(object sender, EventArgs e)
+        private void OnSettingsChanged(object sender, bool e)
         {
-            HandleAutoStart();
+            if (e)
+            {
+                HandleAutoStart();
+            }
+
             StopAllFunctions();
             StartAllFunctions();
         }

@@ -22,16 +22,18 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type MenuItem}">
-                            <Border x:Name="MenuItemBorder" Margin="2" Padding="0,2,0,2" MinWidth="64" MinHeight="32" Background="White">
+                            <Border x:Name="MenuItemBorder" Margin="2" MinWidth="64" MinHeight="40" Background="White">
                                 <StackPanel Margin="8,0,8,0" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <ContentPresenter Margin="8,0,8,0" ContentSource="Icon" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    <ContentPresenter Margin="0,0,8,0" ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <ContentPresenter Margin="8,0,4,0" ContentSource="Icon" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <!--<ContentPresenter Margin="0,0,8,0" ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+                                    <TextBlock x:Name="HeaderTextBlock" Margin="4,0,8,0" FontSize="16" Text="{TemplateBinding Header}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Trigger.Setters>
-                                        <Setter TargetName="MenuItemBorder" Property="Background" Value="#D4D4D4"/>
+                                        <Setter TargetName="MenuItemBorder" Property="Background" Value="#212121"/>
+                                        <Setter TargetName="HeaderTextBlock" Property="Foreground" Value="White"/>
                                     </Trigger.Setters>
                                 </Trigger>
                             </ControlTemplate.Triggers>
@@ -46,12 +48,12 @@
         </ContextMenu.Resources>
         <MenuItem Header="{utils:Translater Setting}" Command="{Binding SettingCommand}">
             <MenuItem.Icon>
-                <Image Source="../../Resources/Setting.png"/>
+                <Image Source="../../Resources/Setting.png" Width="24" Height="24"/>
             </MenuItem.Icon>
         </MenuItem>
-        <MenuItem Header="{utils:Translater Exit}"  Command="{Binding ExitCommand}">
+        <MenuItem Header="{utils:Translater Exit}" Command="{Binding ExitCommand}">
             <MenuItem.Icon>
-                <Image Source="../../Resources/Exit.png"/>
+                <Image Source="../../Resources/Exit.png" Width="24" Height="24" />
             </MenuItem.Icon>
         </MenuItem>
     </ContextMenu>

@@ -37,8 +37,8 @@ namespace X330Backlight.Services
         {
             try
             {
-                var result = WinApi.RegOpenKeyEx(_localMachineKey, NotificationKey, 0,
-                    WinApi.StandardRightsRead | WinApi.KeyQueryValue | WinApi.KeyNotify,
+                var result = Native.RegOpenKeyEx(_localMachineKey, NotificationKey, 0,
+                    Native.StandardRightsRead | Native.KeyQueryValue | Native.KeyNotify,
                     out var notifyKey);
                 if (result != 0)
                 {
@@ -48,15 +48,15 @@ namespace X330Backlight.Services
 
                 try
                 {
-                    const WinApi.RegChangeNotifyFilter filter =
-                        WinApi.RegChangeNotifyFilter.Key | WinApi.RegChangeNotifyFilter.Attribute |
-                        WinApi.RegChangeNotifyFilter.Value | WinApi.RegChangeNotifyFilter.Security;
+                    const Native.RegChangeNotifyFilter filter =
+                        Native.RegChangeNotifyFilter.Key | Native.RegChangeNotifyFilter.Attribute |
+                        Native.RegChangeNotifyFilter.Value | Native.RegChangeNotifyFilter.Security;
                     var eventNotify = new AutoResetEvent(false);
                     var eventNotifyHandle = eventNotify.SafeWaitHandle.DangerousGetHandle();
                     WaitHandle[] waitHandles = {eventNotify, _eventTerminate};
                     while (!_eventTerminate.WaitOne(1))
                     {
-                        result = WinApi.RegNotifyChangeKeyValue(notifyKey, true, filter, eventNotifyHandle, true);
+                        result = Native.RegNotifyChangeKeyValue(notifyKey, true, filter, eventNotifyHandle, true);
                         if (result != 0)
                         {
                             Logger.Write($"Register registry monitor failed. Code:{result}");
@@ -97,7 +97,7 @@ namespace X330Backlight.Services
                 {
                     if (notifyKey != IntPtr.Zero)
                     {
-                        if (WinApi.RegCloseKey(notifyKey) != 0)
+                        if (Native.RegCloseKey(notifyKey) != 0)
                         {
                             Logger.Write($"Close the registry monitor failed. Code:{result}");
                         }

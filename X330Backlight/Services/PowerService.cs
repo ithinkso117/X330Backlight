@@ -33,8 +33,8 @@ namespace X330Backlight.Services
         {
             get
             {
-                WinApi.GetSystemPowerStatus(out var sps);
-                return sps.LineStatus == WinApi.AcLineStatus.Online;
+                Native.GetSystemPowerStatus(out var sps);
+                return sps.LineStatus == Native.AcLineStatus.Online;
             }
         }
 
@@ -46,14 +46,14 @@ namespace X330Backlight.Services
         {
             get
             {
-                if (WinApi.GetSystemPowerStatus(out var sps))
+                if (Native.GetSystemPowerStatus(out var sps))
                 {
-                    if (sps.BatteryFlag == WinApi.BatteryFlag.High)
+                    if (sps.BatteryFlag == Native.BatteryFlag.High)
                     {
                         return BatteryStatus.High;
                     }
 
-                    if (sps.BatteryFlag == WinApi.BatteryFlag.Low)
+                    if (sps.BatteryFlag == Native.BatteryFlag.Low)
                     {
                         return BatteryStatus.Low;
                     }
@@ -72,18 +72,18 @@ namespace X330Backlight.Services
 
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled)
         {
-            if (msg == WinApi.WmPowerbroadcast)
+            if (msg == Native.WmPowerbroadcast)
             {
-                if (wparam.ToInt32() == WinApi.PbtPowersettingchange)
+                if (wparam.ToInt32() == Native.PbtPowersettingchange)
                 {
-                    WinApi.PowerbroadcastSetting setting = (WinApi.PowerbroadcastSetting)Marshal.PtrToStructure(lparam, typeof(WinApi.PowerbroadcastSetting));
+                    Native.PowerbroadcastSetting setting = (Native.PowerbroadcastSetting)Marshal.PtrToStructure(lparam, typeof(Native.PowerbroadcastSetting));
                     if (setting.PowerSetting == _guidLidswitchStateChange)
                     {
                         LidSwitchStatusChanged?.Invoke(this, setting.Data == 1? LidSwitchStatus.Opened: LidSwitchStatus.Closed);
                     }
                 }
 
-                if (wparam.ToInt32() == WinApi.PbtApmpowerstatuschange)
+                if (wparam.ToInt32() == Native.PbtApmpowerstatuschange)
                 {
                     //Check if the AC changed or battery changed.
                 }
@@ -117,7 +117,7 @@ namespace X330Backlight.Services
             if (Owner != null)
             {
                 var handle = Owner.Source.Handle;
-                _lidSwitchChangeHandle = WinApi.RegisterPowerSettingNotification(handle, ref _guidLidswitchStateChange, 0);
+                _lidSwitchChangeHandle = Native.RegisterPowerSettingNotification(handle, ref _guidLidswitchStateChange, 0);
                 if (_lidSwitchChangeHandle == IntPtr.Zero)
                 {
                     Logger.Write("Register PowerSettingNotification failed.");
@@ -137,7 +137,7 @@ namespace X330Backlight.Services
         {
             if (_lidSwitchChangeHandle != IntPtr.Zero)
             {
-                if (!WinApi.UnregisterPowerSettingNotification(_lidSwitchChangeHandle))
+                if (!Native.UnregisterPowerSettingNotification(_lidSwitchChangeHandle))
                 {
                     Logger.Write("UnRegister PowerSettingNotification failed.");
                 }

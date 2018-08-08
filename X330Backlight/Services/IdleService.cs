@@ -46,11 +46,11 @@ namespace X330Backlight.Services
         /// <returns>last user input(mouse or keyboard) time in ms.</returns>
         private int GetLastInputTime()
         {
-            var lastinputInfo = new WinApi.LastinputInfo();
+            var lastinputInfo = new Native.LastinputInfo();
             lastinputInfo.cbSize = (uint)Marshal.SizeOf((object)lastinputInfo);
-            if (!WinApi.GetLastInputInfo(ref lastinputInfo))
+            if (!Native.GetLastInputInfo(ref lastinputInfo))
             {
-                var error = WinApi.GetLastError().ToString();
+                var error = Native.GetLastError().ToString();
                 Logger.Write($"Get last input time failed, error:{error}");
             }   
             return (int)lastinputInfo.dwTime;
@@ -64,8 +64,8 @@ namespace X330Backlight.Services
         private bool IsPreventingIdle()
         {
             Array.Clear(_stateData,0,_stateData.Length);
-            var result = WinApi.CallNtPowerInformation(
-                WinApi.SystemExecutionState,
+            var result = Native.CallNtPowerInformation(
+                Native.SystemExecutionState,
                 IntPtr.Zero, 
                 0,
                 _stateData,
@@ -74,9 +74,9 @@ namespace X330Backlight.Services
             if (result == 0)
             {
                 var state = BitConverter.ToUInt64(_stateData, 0);
-                if((state & WinApi.EsDisplayRequired) == WinApi.EsDisplayRequired ||
-                   (state & WinApi.EsAwaymodeRequired) == WinApi.EsAwaymodeRequired||
-                   (state & WinApi.EsSystemRequired) == WinApi.EsSystemRequired)
+                if((state & Native.EsDisplayRequired) == Native.EsDisplayRequired ||
+                   (state & Native.EsAwaymodeRequired) == Native.EsAwaymodeRequired||
+                   (state & Native.EsSystemRequired) == Native.EsSystemRequired)
                 {
                     return true;
                 }

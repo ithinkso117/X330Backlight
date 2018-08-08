@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AutoStart Setting Tool")]
-[assembly: AssemblyDescription("Backlight Toolset for X330 series")]
+[assembly: AssemblyTitle("X330Backlight AutoStart Setting Tool")]
+[assembly: AssemblyDescription("X330Backlight Toolsets")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("X330 Team")]
 [assembly: AssemblyProduct("AutoStart")]

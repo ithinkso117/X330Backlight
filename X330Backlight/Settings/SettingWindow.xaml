@@ -576,7 +576,10 @@
             <ItemsControl Background="#D4D4D4" Grid.Row="1">
                 <Grid Margin="6">
                     <TextBlock Text="{utils:Translater AutoStart}" Style="{StaticResource SettingTextBlock}"/>
-                    <CheckBox Style="{StaticResource SwitchCheckBoxStyle}" IsChecked="{Binding AutoStart}"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <Image Margin="0,0,4,0" Source="../Resources/Shield.png" Height="24" Width="24"/>
+                        <CheckBox Style="{StaticResource SwitchCheckBoxStyle}" IsChecked="{Binding AutoStart}"/>
+                    </StackPanel>
                 </Grid>
                 <Grid Margin="6">
                     <Grid.RowDefinitions>
@@ -588,7 +591,6 @@
                     <Border Grid.Row="1" Height="88" Margin="0,0,20,0" VerticalAlignment="Center" HorizontalAlignment="Right" CornerRadius="4"  BorderBrush="#F5F5F5" BorderThickness="1">
                         <Image Margin="4" MaxWidth="230" MaxHeight="80" Source="{Binding SelectedOsdStyles.Image}"/>
                     </Border>
-
                 </Grid>
                 <Grid Margin="6">
                     <TextBlock Text="{utils:Translater OSDTimeout}" Style="{StaticResource SettingTextBlock}"/>
