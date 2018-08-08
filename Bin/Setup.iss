@@ -27,6 +27,7 @@ WizardImageFile=SetupWizard.bmp
 OutputDir=".\"
 OutputBaseFilename={#SetupAppName}_{#SetupAppVersion}
 UninstallDisplayName={cm:MyAppName}
+UninstallDisplayIcon=AppIcon.ico
 DisableWelcomePage=no
 
 [Languages]
