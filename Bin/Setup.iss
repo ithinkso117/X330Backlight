@@ -51,6 +51,10 @@ Source: "NFX350\AutoStart.exe"; DestDir: "{app}"; Flags: ignoreversion; Check:Is
 Source: "SLABHIDDevice.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Languages\*.*"; DestDir: "{app}\Languages"; Flags: ignoreversion recursesubdirs createallsubdirs
 
+[Icons]
+Name: "{group}\{cm:MyAppName}"; Filename: "{app}\{#SetupAppExeName}"
+Name: "{commondesktop}\{cm:MyAppName}"; Filename: "{app}\{#SetupAppExeName}"; Tasks: desktopicon
+
 [Run]
 Filename: "{app}\{#SetupAppExeName}"; Description: "{cm:LaunchProgram,{cm:MyAppName}}"; Flags:runascurrentuser nowait postinstall skipifsilent
 
