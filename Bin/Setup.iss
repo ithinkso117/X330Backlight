@@ -5,7 +5,7 @@
 #define SetupAppPublisher "X330 Team"
 #define CopyRight "Copyright ©2018 X330 Team."
 #define SetupAppExeName "X330Backlight.exe"
-#define SetupAppVersion "1.0.0.7"
+#define SetupAppVersion "1.0.0.8"
 
 [Setup]
 AppId={{34F9CD09-11EF-4911-99CF-5B88F7B479EE}

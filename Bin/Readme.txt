@@ -2,6 +2,9 @@ Windows10下直接解压到任意目录运行X330Backlight.exe，第一次运行会显示设置程序，按
 Windows7下请先安装.NET Framework 4.6.1, 下载地址：https://www.microsoft.com/zh-CN/download/details.aspx?id=49982
 
 更新历史
+2018-08-10 V1.0.0.8
+1. 修复某些情况下从休眠状态唤醒后无法调光的问题。
+
 2018-08-08 V1.0.0.7
 1. 修复Win7下设置界面无法显示并奔溃的问题。
 

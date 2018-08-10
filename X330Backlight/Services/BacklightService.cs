@@ -244,14 +244,35 @@ namespace X330Backlight.Services
                 //This is for avoiding duplication start.
                 Stop();
             }
-            if (HID.GetNumHidDevices(Vid, Pid) > 0)
+
+            var tryGetTimes = 3;
+            while (tryGetTimes >= 0)
             {
-                var result = HID.Open(ref _deviceId, 0, Vid, Pid, 512);
-                if (result == 0)
+                if (HID.GetNumHidDevices(Vid, Pid) > 0)
                 {
-                    //Set timeout.
-                    HID.SetTimeouts(_deviceId, 0, 1000);
+                    if (HID.GetNumHidDevices(Vid, Pid) > 0)
+                    {
+                        var tryOpenTimes = 3;
+                        while (tryOpenTimes >=0)
+                        {
+                            var result = HID.Open(ref _deviceId, 0, Vid, Pid, 512);
+                            if (result == 0)
+                            {
+                                //Set timeout.
+                                HID.SetTimeouts(_deviceId, 0, 1000);
+                                break;
+                            }
+                            Logger.Write($"Try Open HID Device times:{tryGetTimes}");
+                            Thread.Sleep(1000);
+                            tryOpenTimes--;
+                        }
+                        
+                    }
+                    break;
                 }
+                Logger.Write($"Try get HID Device times:{tryGetTimes}");
+                Thread.Sleep(1000);
+                tryGetTimes--;
             }
 
             using (new ForceLoadBrightnessTransaction(this))
@@ -317,12 +338,13 @@ namespace X330Backlight.Services
             }
             if (_deviceId != 0)
             {
-                //Close the HID
-                if (HID.Close(_deviceId) != 0)
+                var tryTimes = 5; // try 6 times.
+                while (HID.Close(_deviceId) != 0 && tryTimes >= 0)
                 {
-                    Logger.Write("Close HID device failed.");
+                    Logger.Write($"Close HID device failed. TryTimes={tryTimes}");
+                    Thread.Sleep(200);
+                    tryTimes--;
                 }
-
                 _deviceId = 0;
             }
         }
