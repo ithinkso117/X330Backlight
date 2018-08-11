@@ -26,6 +26,11 @@ namespace X330Backlight.Services.Interfaces
         /// System is about to resume.
         /// </summary>
         Resuming,
+
+        /// <summary>
+        /// System power state changed, could be ac become battery.
+        /// </summary>
+        StatusChanged
     }
 
     internal enum BatteryStatus

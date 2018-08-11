@@ -13,20 +13,37 @@ namespace X330Backlight.Services
 
         private readonly object _brightnessLocker = new object();
 
-        private bool _forceLoadBrightness = false;
+        private bool _forceLoadBrightness;
 
         private uint _deviceId;
         private int _brightness;
 
         private readonly ManualResetEvent _eventTerminate = new ManualResetEvent(false);
         private Thread _monitorThread;
-
+        private BacklightMode _mode;
 
 
         /// <summary>
         /// Raised when the brightness changed.
         /// </summary>
         public event EventHandler BrightnessChanged;
+
+
+        /// <summary>
+        /// Gets or sets the current backlight mode.
+        /// </summary>
+        public BacklightMode Mode
+        {
+            get => _mode;
+            set
+            {
+                if (_mode != value)
+                {
+                    _mode = value;
+                    Brightness = LoadBrightness();
+                }
+            }
+        }
 
 
         /// <summary>
@@ -62,7 +79,8 @@ namespace X330Backlight.Services
         /// </summary>
         public void SaveBrightness()
         {
-            SettingManager.SaveBrightness(Brightness);
+            var isAc = Mode == BacklightMode.Ac;
+            SettingManager.SaveBrightness(Brightness, isAc);
         }
 
         /// <summary>
@@ -70,7 +88,12 @@ namespace X330Backlight.Services
         /// </summary>
         public byte LoadBrightness()
         {
-            return (byte)SettingManager.Brightness;
+            if (Mode == BacklightMode.Ac)
+            {
+                return (byte) SettingManager.AcBrightness;
+            }
+
+            return (byte) SettingManager.BatteryBrightness;
         }
 
 
@@ -125,11 +148,10 @@ namespace X330Backlight.Services
         /// <summary>
         /// Reduce the backlight 
         /// </summary>
-        /// <param name="batteryMode">Ture when using battrty</param>
-        public void EnterSavingMode(bool batteryMode)
+        public void EnterSavingMode()
         {
             SaveBrightness();
-            Brightness = batteryMode
+            Brightness = Mode == BacklightMode.Battery
                 ? SettingManager.BatterySavingModeBrightness
                 : SettingManager.AcSavingModeBrightness;
         }

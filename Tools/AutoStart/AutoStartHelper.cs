@@ -6,41 +6,48 @@ namespace AutoStart
     {
         public static void AutoStart(string appName, string exePath, bool autoStart)
         {
-            RegistryKey registryKey =
-                Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true) ??
-                Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
-            if (registryKey != null)
+            try
             {
-                if (autoStart)
+                RegistryKey registryKey =
+                    Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true) ??
+                    Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
+                if (registryKey != null)
                 {
-                    try
+                    if (autoStart)
                     {
-                        if (registryKey.GetValue(appName) == null)
+                        try
                         {
-                            registryKey.SetValue(appName, exePath);
+                            if (registryKey.GetValue(appName) == null)
+                            {
+                                registryKey.SetValue(appName, exePath);
+                            }
+                        }
+                        catch
+                        {
+                            //log
                         }
                     }
-                    catch
+                    else
                     {
-                        //log
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        if (registryKey.GetValue(appName) != null)
+                        try
                         {
-                            registryKey.DeleteValue(appName);
+                            if (registryKey.GetValue(appName) != null)
+                            {
+                                registryKey.DeleteValue(appName);
+                            }
+                        }
+                        catch
+                        {
+                            //log
                         }
                     }
-                    catch
-                    {
-                        //log
-                    }
-                }
 
-                registryKey.Close();
+                    registryKey.Close();
+                }
+            }
+            catch
+            {
+                //log
             }
         }
     }

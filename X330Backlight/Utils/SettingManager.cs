@@ -24,7 +24,8 @@ namespace X330Backlight.Utils
         private static readonly string SettingFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "X330Backlight.ini");
 
 
-        public const int DefaultBrightness = 7;
+        public const int DefaultAcBrightness = 10;
+        public const int DefaultBatteryBrightness = 7;
         public const bool DefaultAutoStart = false;
         public const int DefaultOsdStyle = 1;
         public const int DefaultOsdTimeout = 3;
@@ -56,9 +57,15 @@ namespace X330Backlight.Utils
         public static string Version { get; }
 
         /// <summary>
-        /// Gets or sets the current brightness
+        /// Gets or sets the current ac brightness
         /// </summary>
-        public static int Brightness { get; private set; }
+        public static int AcBrightness { get; private set; }
+
+
+        /// <summary>
+        /// Gets or sets the current battery brightness.
+        /// </summary>
+        public static int BatteryBrightness { get; private set; }
 
 
         /// <summary>
@@ -134,7 +141,8 @@ namespace X330Backlight.Utils
             }
             ConfigManager = new ConfigManager(settingContent);
             Version = ConfigManager.GetValue("Setting", "Version", string.Empty);
-            Brightness = ConfigManager.GetValue("Setting","Brightness", DefaultBrightness);
+            AcBrightness = ConfigManager.GetValue("Setting","ACBrightness", DefaultAcBrightness);
+            BatteryBrightness = ConfigManager.GetValue("Setting", "BatteryBrightness", DefaultBatteryBrightness);
             AutoStart = ConfigManager.GetValue("Setting","AutoStart", DefaultAutoStart);
             OsdStyle = ConfigManager.GetValue("Setting", "OSDStyle", DefaultOsdStyle);
             OsdTimeout = ConfigManager.GetValue("Setting", "OSDTimeOut", DefaultOsdTimeout);
@@ -152,7 +160,7 @@ namespace X330Backlight.Utils
                 //Reset to default.
                 ConfigManager = new ConfigManager(string.Empty);
                 Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                Brightness = DefaultBrightness;
+                AcBrightness = DefaultAcBrightness;
                 UpdateSettings();
                 IsFirstRun = true;
             }
@@ -161,11 +169,20 @@ namespace X330Backlight.Utils
         /// <summary>
         /// Save the given brightness to the setting file.
         /// </summary>
-        /// <param name="brightness"></param>
-        public static void SaveBrightness(int brightness)
+        /// <param name="brightness">The brightness to save.</param>
+        /// <param name="isAc">If is Ac plugged in</param>
+        public static void SaveBrightness(int brightness, bool isAc)
         {
-            Brightness = brightness;
-            ((IConfigUpdater)ConfigManager).SetValue("Setting", "Brightness", Brightness);
+            if (isAc)
+            {
+                AcBrightness = brightness;
+            }
+            else
+            {
+                BatteryBrightness = brightness;
+            }
+            ((IConfigUpdater)ConfigManager).SetValue("Setting", "AcBrightness", AcBrightness);
+            ((IConfigUpdater)ConfigManager).SetValue("Setting", "BatteryBrightness", BatteryBrightness);
             using (var fs = new FileStream(SettingFilePath,FileMode.Create, FileAccess.ReadWrite,FileShare.ReadWrite))
             {
                 ((IConfigUpdater) ConfigManager).Save(fs);
@@ -214,7 +231,8 @@ namespace X330Backlight.Utils
             TurnOffMonitorByThinkVantage = turnOffMonitorByThinkVantage;
 
             ((IConfigUpdater)ConfigManager).SetValue("Setting", "Version", Version);
-            ((IConfigUpdater)ConfigManager).SetValue("Setting", "Brightness", Brightness);
+            ((IConfigUpdater)ConfigManager).SetValue("Setting", "AcBrightness", AcBrightness);
+            ((IConfigUpdater)ConfigManager).SetValue("Setting", "BatteryBrightness", BatteryBrightness);
             ((IConfigUpdater)ConfigManager).SetValue("Setting", "AutoStart", AutoStart);
             ((IConfigUpdater)ConfigManager).SetValue("Setting", "OSDStyle", OsdStyle);
             ((IConfigUpdater)ConfigManager).SetValue("Setting", "OSDTimeOut", OsdTimeout);

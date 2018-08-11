@@ -82,14 +82,10 @@ namespace X330Backlight.Services
                         LidSwitchStatusChanged?.Invoke(this, new LidSwitchStatusChangedEventArgs(setting.Data == 1? LidSwitchStatus.Opened: LidSwitchStatus.Closed));
                     }
                 }
-
-                if (wparam.ToInt32() == Native.PbtApmpowerstatuschange)
-                {
-                    //Check if the AC changed or battery changed.
-                }
             }
             return IntPtr.Zero;
         }
+
 
         private void PowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
@@ -100,6 +96,10 @@ namespace X330Backlight.Services
             else if (e.Mode == PowerModes.Suspend)
             {
                 PowerStatusChanged?.Invoke(this, new PowerChangeStatusEventArgs(PowerChangeStatus.Suspending));
+            }
+            else if (e.Mode == PowerModes.StatusChange)
+            {
+                PowerStatusChanged?.Invoke(this, new PowerChangeStatusEventArgs(PowerChangeStatus.StatusChanged));
             }
         }
 

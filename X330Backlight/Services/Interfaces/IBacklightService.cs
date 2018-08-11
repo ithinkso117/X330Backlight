@@ -2,12 +2,31 @@
 
 namespace X330Backlight.Services.Interfaces
 {
+    internal enum BacklightMode
+    {
+        /// <summary>
+        /// Backlight is under AC mode.
+        /// </summary>
+        Ac,
+
+        /// <summary>
+        /// Backligt is under battery mode.
+        /// </summary>
+        Battery
+    }
+
     internal interface IBacklightService :IService
     {
         /// <summary>
         /// Raised when the brightness changed.
         /// </summary>
         event EventHandler BrightnessChanged;
+
+
+        /// <summary>
+        /// Gets or sets the current backlight mode.
+        /// </summary>
+        BacklightMode Mode { get; set; }
 
         /// <summary>
         /// Gets if the Backlight is in closed status.
@@ -46,8 +65,7 @@ namespace X330Backlight.Services.Interfaces
         /// <summary>
         /// Reduce the backlight 
         /// </summary>
-        /// <param name="batteryMode">Ture when using battrty</param>
-        void EnterSavingMode(bool batteryMode);
+        void EnterSavingMode();
 
         /// <summary>
         /// Exit the saving mode, increase the backlight.

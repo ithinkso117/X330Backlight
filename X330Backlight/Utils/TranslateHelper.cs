@@ -22,7 +22,8 @@ namespace X330Backlight.Utils
             {
                 languageFile = Path.Combine(languageDir, DefaultLanguage + ".ini");
             }
-            LanguageManager = new ConfigManager(File.ReadAllText(languageFile));
+
+            LanguageManager = File.Exists(languageFile) ? new ConfigManager(File.ReadAllText(languageFile)) : new ConfigManager(string.Empty);
         }
 
         // Methods 

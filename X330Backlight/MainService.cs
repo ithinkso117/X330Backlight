@@ -42,17 +42,17 @@ namespace X330Backlight
                 registeredService.Start();
                 Logger.Write($"{registeredService.GetType().Name} started.");
             }
+
+            backlightService.Mode = powerService.AcPowerPluggedIn ? BacklightMode.Ac : BacklightMode.Battery;
         }
 
         private void OnIdleStateChanged(object sender, EventArgs e)
         {
             var idleService = (IIdleService) sender;
-            var powerService = ServiceManager.GetService<IPowerService>();
             var backlightService = ServiceManager.GetService<IBacklightService>();
             if (idleService.IsIdle)
             {
-                var batteryMode = !powerService.AcPowerPluggedIn;
-                backlightService.EnterSavingMode(batteryMode);
+                backlightService.EnterSavingMode();
             }
             else
             {
@@ -104,6 +104,13 @@ namespace X330Backlight
                         Logger.Write($"{registeredService.GetType().Name} stopped.");
                     }
                     break;
+                case PowerChangeStatus.StatusChanged:
+                {
+                    var powerService = (IPowerService) sender;
+                    var backlightService = ServiceManager.GetService<IBacklightService>();
+                    backlightService.Mode = powerService.AcPowerPluggedIn? BacklightMode.Ac:BacklightMode.Battery;
+                    break;
+                }
             }
         }
       

@@ -26,18 +26,6 @@ namespace X330Backlight.Services
 
 
         /// <summary>
-        /// UnRegister a service from ServiceManager.
-        /// </summary>
-        public static void UnRegisterService<T>() where T: IService
-        {
-            var type = typeof(T);
-            if (Services.ContainsKey(type))
-            {
-                Services.Remove(type);
-            }
-        }
-
-        /// <summary>
         /// Gets one service from the ServiceManager by given type.
         /// </summary>
         /// <typeparam name="T"></typeparam>
